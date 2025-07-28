@@ -1,13 +1,11 @@
-import { Header, MenuTap } from "../components";
+import { MainLayout } from "../components";
 
 export const Home = () => {
   return (
     <div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <MenuTap />
-        <Header />
-        <p>홈</p>
-      </div>
+      <MainLayout>
+        <div>홈페이지 내용</div>
+      </MainLayout>
     </div>
   );
 };
