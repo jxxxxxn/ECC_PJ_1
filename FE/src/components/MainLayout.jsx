@@ -4,12 +4,14 @@ import { IoHome } from "react-icons/io5";
 import clip from "../assets/icons/clip.png";
 import profile from "../assets/profile.jpg";
 import "../styles/TextStyle.css";
+import { Outlet } from "react-router-dom";
 
 const Layout = styled.div`
   display: flex;
   height: 100vh;
 `;
 
+// sidebar 요소
 const Sidebar = styled.div`
   width: 100px;
   border-right: 1px solid #d7d7d7;
@@ -50,21 +52,22 @@ const Main = styled.div`
   flex-direction: column;
 `;
 
+// 헤더 요소 - 검색 & 닉네임 표시
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   padding: 25px 24px 15px 24px;
-  justify-content: space-between;
+  justify-content: left;
   align-items: center;
 `;
 const SearchBar = styled.input`
-  width: 1200px;
+  flex: 1;
+  min-width: 200px; // 이거 얼마나 할건지! 반응형 어떻게??
   height: 40px;
   border-radius: 30px;
   background-color: #f0f0f0;
   border-width: 0;
 `;
-
 const NicknameWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -82,30 +85,30 @@ const Content = styled.div`
   display: flex;
 `;
 
-export const MenuTap = () => {
+export const MainLayout = () => {
   return (
-    <>
-      <Layout>
-        <Sidebar>
-          <Container>
-            <IconContainer>
-              <Logo src={logo} alt="Linkrap Logo" />
-              <HomeIcon />
-              <ClipIcon src={clip} alt="clip icon" />
-            </IconContainer>
-          </Container>
-        </Sidebar>
-        <Main>
-          <Header>
-            <SearchBar />
-            <NicknameWrapper>
-              <ProfileImage src={profile} alt="basic profile" />
-              <div className="body1">Nickname</div>
-            </NicknameWrapper>
-          </Header>
-          <Content>{/* 본문, 오른쪽 패널 등 */}</Content>
-        </Main>
-      </Layout>
-    </>
+    <Layout>
+      <Sidebar>
+        <Container>
+          <IconContainer>
+            <Logo src={logo} alt="Linkrap Logo" />
+            <HomeIcon />
+            <ClipIcon src={clip} alt="clip icon" />
+          </IconContainer>
+        </Container>
+      </Sidebar>
+      <Main>
+        <Header>
+          <SearchBar />
+          <NicknameWrapper>
+            <ProfileImage src={profile} alt="basic profile" />
+            <div className="body1">Nickname</div>
+          </NicknameWrapper>
+        </Header>
+        <Content>
+          <Outlet />
+        </Content>
+      </Main>
+    </Layout>
   );
 };

@@ -1,2 +1,2 @@
-export { Header } from "./Header";
 export { MenuTap } from "./MenuTap";
+export { MainLayout } from "./MainLayout";
