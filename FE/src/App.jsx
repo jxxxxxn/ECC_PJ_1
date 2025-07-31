@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Home } from "./pages";
+import { Home, FriendList, LinkUpload } from "./pages";
 import { MainLayout } from "./components";
 import { Login, LoginOk, SignUp, SetNickname } from "./pages/login";
 
@@ -14,6 +14,8 @@ const App = () => {
           <Route path="/setnickname" element={<SetNickname />} />
           <Route element={<MainLayout />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/linkupload" element={<FriendList />} />
+            <Route path="/friendlist" element={<LinkUpload />} />
           </Route>
         </Routes>
       </Router>

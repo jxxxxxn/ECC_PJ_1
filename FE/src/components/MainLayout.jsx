@@ -1,11 +1,16 @@
 import styled from "styled-components";
 import logo from "../assets/logo.png";
-import { IoHome } from "react-icons/io5";
-import clip from "../assets/icons/clip.png";
 import profile from "../assets/profile.jpg";
 import "../styles/TextStyle.css";
-import { Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import homeClick from "../assets/icons/home-click.png";
+import homeUnclick from "../assets/icons/home-unclick.png";
+import peopleClick from "../assets/icons/people-click.png";
+import peopleUnclick from "../assets/icons/people-unclick.png";
+import clipClick from "../assets/icons/clip-click.png";
+import clipUnclick from "../assets/icons/clip-unclick.png";
+import { Outlet, useNavigate } from "react-router-dom";
+
 
 const Layout = styled.div`
   display: flex;
@@ -29,23 +34,21 @@ const IconContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 35px;
+  justify-content: center;
+  margin-top: 30px;
+  padding: 0 22px;
 `;
 
-const Logo = styled.img`
-  width: 90px;
-  height: 90px;
+const Icon = styled.img`
+  width: 40px;
+  height: 40px;
   cursor: pointer;
 `;
 
-const HomeIcon = styled(IoHome)`
-  font-size: 40px;
-  padding: 30px 0 15px 0;
-`;
-
-const ClipIcon = styled.img`
-  width: 60px;
-  height: 60px;
-  padding: 15px 0;
+const Logo = styled.img`
+  width: 105px;
+  height: 105px;
 `;
 
 const Main = styled.div`
@@ -89,19 +92,39 @@ const Content = styled.div`
 
 export const MainLayout = () => {
   const navigate = useNavigate();
+  const [selectIcon, setSelectIcon] = useState("home");
 
+  const handleIconClick = (iconName) => {
+    setSelectIcon(iconName);
+
+    if (iconName == "home") navigate("/home");
+    else if (iconName == "clip") navigate("/linkupload");
+    else if (iconName == "people") navigate("/friendlist");
+  };
+
+>>>>>>> origin
   return (
     <Layout>
       <Sidebar>
         <Container>
+          <Logo src={logo} alt="Linkrap Logo" />
           <IconContainer>
-            <Logo
-              src={logo}
-              alt="Linkrap Logo"
-              onClick={() => navigate("/home")}
+            <Icon
+              src={selectIcon === "home" ? homeClick : homeUnclick}
+              onClick={() => handleIconClick("home")}
+              alt="home"
             />
-            <HomeIcon />
-            <ClipIcon src={clip} alt="clip icon" />
+            <Icon
+              src={selectIcon === "clip" ? clipClick : clipUnclick}
+              onClick={() => handleIconClick("clip")}
+              alt="clip"
+              style={{ width: 55, height: 55 }}
+            />
+            <Icon
+              src={selectIcon === "people" ? peopleClick : peopleUnclick}
+              onClick={() => handleIconClick("people")}
+              alt="people"
+            />
           </IconContainer>
         </Container>
       </Sidebar>
