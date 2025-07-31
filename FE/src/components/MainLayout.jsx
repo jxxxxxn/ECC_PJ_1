@@ -11,7 +11,6 @@ import clipClick from "../assets/icons/clip-click.png";
 import clipUnclick from "../assets/icons/clip-unclick.png";
 import { Outlet, useNavigate } from "react-router-dom";
 
-
 const Layout = styled.div`
   display: flex;
   height: 100vh;
@@ -102,7 +101,6 @@ export const MainLayout = () => {
     else if (iconName == "people") navigate("/friendlist");
   };
 
->>>>>>> origin
   return (
     <Layout>
       <Sidebar>
