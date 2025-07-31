@@ -5,6 +5,7 @@ import clip from "../assets/icons/clip.png";
 import profile from "../assets/profile.jpg";
 import "../styles/TextStyle.css";
 import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Layout = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ const IconContainer = styled.div`
 const Logo = styled.img`
   width: 90px;
   height: 90px;
+  cursor: pointer;
 `;
 
 const HomeIcon = styled(IoHome)`
@@ -86,12 +88,18 @@ const Content = styled.div`
 `;
 
 export const MainLayout = () => {
+  const navigate = useNavigate();
+
   return (
     <Layout>
       <Sidebar>
         <Container>
           <IconContainer>
-            <Logo src={logo} alt="Linkrap Logo" />
+            <Logo
+              src={logo}
+              alt="Linkrap Logo"
+              onClick={() => navigate("/home")}
+            />
             <HomeIcon />
             <ClipIcon src={clip} alt="clip icon" />
           </IconContainer>

@@ -8,12 +8,12 @@ const App = () => {
     <>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/loginok" element={<LoginOk />} />
           <Route path="/setnickname" element={<SetNickname />} />
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
+          <Route element={<MainLayout />}>
+            <Route path="/home" element={<Home />} />
           </Route>
         </Routes>
       </Router>
