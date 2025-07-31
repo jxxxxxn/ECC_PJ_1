@@ -4,6 +4,7 @@ import { IoHome } from "react-icons/io5";
 import clip from "../assets/icons/clip.png";
 import profile from "../assets/profile.jpg";
 import "../styles/TextStyle.css";
+import { Outlet } from "react-router-dom";
 
 const Layout = styled.div`
   display: flex;
@@ -84,7 +85,7 @@ const Content = styled.div`
   display: flex;
 `;
 
-export const MainLayout = ({ children }) => {
+export const MainLayout = () => {
   return (
     <Layout>
       <Sidebar>
@@ -104,7 +105,9 @@ export const MainLayout = ({ children }) => {
             <div className="body1">Nickname</div>
           </NicknameWrapper>
         </Header>
-        <Content>{children}</Content>
+        <Content>
+          <Outlet />
+        </Content>
       </Main>
     </Layout>
   );
