@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Home } from "./pages";
+import { Home, FriendList, LinkUpload } from "./pages";
 import { MainLayout } from "./components";
 
 const App = () => {
@@ -7,8 +7,10 @@ const App = () => {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
+          <Route element={<MainLayout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/linkupload" element={<FriendList />} />
+            <Route path="/friendlist" element={<LinkUpload />} />
           </Route>
         </Routes>
       </Router>
