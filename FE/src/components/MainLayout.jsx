@@ -90,8 +90,8 @@ const Content = styled.div`
 `;
 
 export const MainLayout = () => {
-  const [selectIcon, setSelectIcon] = useState("home");
   const navigate = useNavigate();
+  const [selectIcon, setSelectIcon] = useState("home");
 
   const handleIconClick = (iconName) => {
     setSelectIcon(iconName);
