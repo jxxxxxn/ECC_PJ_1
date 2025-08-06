@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const TabsWrapper = styled.div`
   width: 100%;
-  height: 100%;
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
