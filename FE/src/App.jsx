@@ -14,8 +14,8 @@ const App = () => {
           <Route path="/setnickname" element={<SetNickname />} />
           <Route element={<MainLayout />}>
             <Route path="/home" element={<Home />} />
-            <Route path="/linkupload" element={<FriendList />} />
-            <Route path="/friendlist" element={<LinkUpload />} />
+            <Route path="/linkupload" element={<LinkUpload />} />
+            <Route path="/friendlist" element={<FriendList />} />
             <Route path="/mypage" element={<MyPage />} />
           </Route>
         </Routes>
