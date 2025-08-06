@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Home, FriendList, LinkUpload } from "./pages";
+import { Home, FriendList, LinkUpload, MyPage } from "./pages";
 import { MainLayout } from "./components";
 import { Login, LoginOk, SignUp, SetNickname } from "./pages/login";
 
@@ -16,6 +16,7 @@ const App = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/linkupload" element={<FriendList />} />
             <Route path="/friendlist" element={<LinkUpload />} />
+            <Route path="/mypage" element={<MyPage />} />
           </Route>
         </Routes>
       </Router>
