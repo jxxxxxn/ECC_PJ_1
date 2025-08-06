@@ -77,7 +77,8 @@ const NicknameWrapper = styled.div`
   flex-direction: row;
   padding-left: 30px;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
+  cursor: "pointer";
 `;
 const ProfileImage = styled.img`
   width: 45px;
@@ -129,7 +130,7 @@ export const MainLayout = () => {
       <Main>
         <Header>
           <SearchBar />
-          <NicknameWrapper>
+          <NicknameWrapper onClick={() => navigate("/mypage")} >
             <ProfileImage src={profile} alt="basic profile" />
             <div className="body1">Nickname</div>
           </NicknameWrapper>
