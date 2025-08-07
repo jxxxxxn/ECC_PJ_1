@@ -1,7 +1,8 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import SortBar from "../components/SortBar";
 import Pagenation from "../components/Pagenation";
 import externalLink from "../assets/icons/external-link.svg";
+import { useNavigate } from "react-router-dom";
 
 const FrameWrapper = styled.div`
   width: 100%;
@@ -39,7 +40,7 @@ const TextWrapper = styled.div`
 const Title = styled.div`
   color: black;
   font-size: 20px;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 400;
   margin-bottom: 5px;
 `;
@@ -47,16 +48,16 @@ const Title = styled.div`
 const Description = styled.div`
   color: #767676;
   font-size: 20px;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   font-weight: 400;
 `;
 
 const Divider = styled.div`
   width: 100%;
   height: 0;
-  border-bottom: 1px solid #909090;        
-  margin-top: 15px;        
-  margin-bottom: 0px;     
+  border-bottom: 1px solid #909090;
+  margin-top: 15px;
+  margin-bottom: 0px;
 `;
 
 const IconWrapper = styled.div`
@@ -80,8 +81,8 @@ const Icon = () => {
   );
 };
 
-const ContentItem = ({ title, description }) => (
-  <Item>
+const ContentItem = ({ title, description, onClick }) => (
+  <Item onClick={onClick} style={{ cursor: "pointer" }}>
     <TextWrapper>
       <Title>{title}</Title>
       <Description>{description}</Description>
@@ -93,17 +94,19 @@ const ContentItem = ({ title, description }) => (
 );
 
 export default function PostlistLayout() {
+  const navigate = useNavigate();
+
   const contentData = [
     {
-      title: '여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~',
-      description: '내 여름 추구미....**',
+      title: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
+      description: "내 여름 추구미....**",
     },
-    ...Array(5).fill({ title: '제목', description: '내용' }),
+    ...Array(5).fill({ title: "제목", description: "내용" }),
   ];
 
   return (
     // 중앙정렬
-    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}> 
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
         <SortBar />
         <FrameWrapper>
@@ -113,6 +116,7 @@ export default function PostlistLayout() {
                 <ContentItem
                   title={item.title}
                   description={item.description}
+                  onClick={() => navigate(`/post/${index + 1}`)}
                 />
                 {index < contentData.length - 1 && <Divider />}
               </div>
@@ -120,10 +124,9 @@ export default function PostlistLayout() {
           </InnerWrapper>
         </FrameWrapper>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <Pagenation currentPage={1} totalPages={5} />
       </div>
     </div>
-    
-);
+  );
 }

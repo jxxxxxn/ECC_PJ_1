@@ -2,14 +2,61 @@ import styled from "styled-components";
 import logo from "../assets/logo.png";
 import profile from "../assets/profile.jpg";
 import "../styles/TextStyle.css";
-import { useState } from "react";
 import homeClick from "../assets/icons/home-click.png";
 import homeUnclick from "../assets/icons/home-unclick.png";
 import peopleClick from "../assets/icons/people-click.png";
 import peopleUnclick from "../assets/icons/people-unclick.png";
 import clipClick from "../assets/icons/clip-click.png";
 import clipUnclick from "../assets/icons/clip-unclick.png";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
+
+export const MainLayout = () => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  return (
+    <Layout>
+      <Sidebar>
+        <Container>
+          <Logo src={logo} alt="Linkrap Logo" />
+          <IconContainer>
+            <Link to="/home">
+              <Icon
+                src={pathname === "/home" ? homeClick : homeUnclick}
+                alt="home"
+              />
+            </Link>
+            <Link to="/linkupload">
+              <Icon
+                src={pathname === "/linkupload" ? clipClick : clipUnclick}
+                alt="clip"
+                style={{ width: 55, height: 55 }}
+              />
+            </Link>
+            <Link to="/friendlist">
+              <Icon
+                src={pathname === "/friendlist" ? peopleClick : peopleUnclick}
+                alt="people"
+              />
+            </Link>
+          </IconContainer>
+        </Container>
+      </Sidebar>
+      <Main>
+        <Header>
+          <SearchBar />
+          <NicknameWrapper onClick={() => navigate("/mypage")}>
+            <ProfileImage src={profile} alt="basic profile" />
+            <div className="body1">Nickname</div>
+          </NicknameWrapper>
+        </Header>
+        <Content>
+          <Outlet />
+        </Content>
+      </Main>
+    </Layout>
+  );
+};
 
 const Layout = styled.div`
   display: flex;
@@ -89,56 +136,3 @@ const Content = styled.div`
   padding: 24px;
   display: flex;
 `;
-
-export const MainLayout = () => {
-  const navigate = useNavigate();
-  const [selectIcon, setSelectIcon] = useState("home");
-
-  const handleIconClick = (iconName) => {
-    setSelectIcon(iconName);
-
-    if (iconName == "home") navigate("/home");
-    else if (iconName == "clip") navigate("/linkupload");
-    else if (iconName == "people") navigate("/friendlist");
-  };
-
-  return (
-    <Layout>
-      <Sidebar>
-        <Container>
-          <Logo src={logo} alt="Linkrap Logo" />
-          <IconContainer>
-            <Icon
-              src={selectIcon === "home" ? homeClick : homeUnclick}
-              onClick={() => handleIconClick("home")}
-              alt="home"
-            />
-            <Icon
-              src={selectIcon === "clip" ? clipClick : clipUnclick}
-              onClick={() => handleIconClick("clip")}
-              alt="clip"
-              style={{ width: 55, height: 55 }}
-            />
-            <Icon
-              src={selectIcon === "people" ? peopleClick : peopleUnclick}
-              onClick={() => handleIconClick("people")}
-              alt="people"
-            />
-          </IconContainer>
-        </Container>
-      </Sidebar>
-      <Main>
-        <Header>
-          <SearchBar />
-          <NicknameWrapper onClick={() => navigate("/mypage")} >
-            <ProfileImage src={profile} alt="basic profile" />
-            <div className="body1">Nickname</div>
-          </NicknameWrapper>
-        </Header>
-        <Content>
-          <Outlet />
-        </Content>
-      </Main>
-    </Layout>
-  );
-};
