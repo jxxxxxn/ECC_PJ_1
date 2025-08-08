@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useParams, Link } from "react-router-dom";
 import profile from "../../assets/profile.jpg";
 
 
@@ -72,7 +73,8 @@ const ProfileButton = styled.div`
 /* ===== MyPageCard 컴포넌트 ===== */
 export default function ProfileCard() {
   const email = "email: ewha12345678@ewha.ac.kr";
-  const Id = "ID_is_ewhawuniv"
+  const userId = "ID_is_ewhawuniv"
+  const { id } = useParams();
 
   return (
       <ProfileWrapper>
@@ -81,10 +83,14 @@ export default function ProfileCard() {
           <ProfileImage src={profile} alt="프로필" />
           <ProfileTextGroup>
             <EmailText>{email}</EmailText>
-            <IdText>{Id}</IdText>
+            <IdText>{userId}</IdText>
           </ProfileTextGroup>
         </ProfileInfoGroup>
-        <ProfileButton>프로필/회원정보 수정</ProfileButton>
+        <Link to={`/mypage/edit/${id}`} style={{ textDecoration: `none` }}>
+          <ProfileButton>
+            프로필/회원정보 수정
+          </ProfileButton>
+        </Link>
       </ProfileWrapper>
   );
 }
