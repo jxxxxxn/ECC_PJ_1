@@ -1,14 +1,15 @@
 // src/components/PageHeader.jsx
 import styled from "styled-components";
 
-const Wrapper = styled.div`
-  width: 100%;
-  height: fit-content;
-  position: relative; 
-  margin-bottom: 5px;
+const TitleWrapper = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
 `;
 
-const Title = styled.div`
+const Title = styled.label`
+  width: fit-content;
   position: relative; 
   text-align: left;
   color: black;
@@ -16,25 +17,23 @@ const Title = styled.div`
   font-family: "Pretendard";
   font-weight: 700;
   word-wrap: break-word;
-  padding-bottom: 8px; /* 밑줄과 텍스트 간 간격 */
+  margin-bottom: 10px; 
 `;
 
 const Underline = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 73px;
+  position: relative; 
+  width: 100%;
   height: 1px;
-  background-color: black; /* ✅ outline 대신 background 사용 */
+  background-color: black; 
 `;
 
 export const PageHeader = ({ title = "링크집" }) => {
   return (
-    <Wrapper>
+    <TitleWrapper>
       <Title>
         {title}
         <Underline />
       </Title>
-    </Wrapper>
+    </TitleWrapper>
   );
 };

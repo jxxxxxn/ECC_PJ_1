@@ -17,7 +17,7 @@ const ButtonGroup = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 4px;
-  position: relative; /* 드롭다운 대비해 상대 위치 지정 */
+  position: relative; 
 `;
 
 // 텍스트 스타일
@@ -34,7 +34,7 @@ const Label = styled.div`
 const IconWrapper = styled.div`
   width: 40px;
   height: 40px;
-  position: relative; /* ✅ 아이콘 위치 기준 잡기 위해 상대 위치 적용 */
+  position: relative; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@ const Icon = () => {
       src={downArrow}
       alt="아이콘"
       style={{
-        width: "24px", // 보통 아이콘은 텍스트보다 작게
+        width: "24px", 
         height: "24px",
         objectFit: "contain",
       }}
