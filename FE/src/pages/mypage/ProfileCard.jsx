@@ -17,13 +17,6 @@ const ProfileInfoGroup = styled.div`
   gap: 30px;
 `;
 
-const ProfileImageBg = styled.div`
-  width: 120px;
-  height: 120px;
-  background: #ffe0d3;
-  border-radius: 9999px;
-`;
-
 const ProfileImage = styled.img`
   width: 120px;
   height: 120px;
