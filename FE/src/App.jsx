@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Home, FriendList, LinkUpload, MyPage, Post, PostEdit } from "./pages";
 import { MainLayout } from "./components";
 import { Login, LoginOk, SignUp, SetNickname } from "./pages/login";
+import ProfileEdit from "./pages/mypage/ProfileEdit";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
             <Route path="/linkupload" element={<LinkUpload />} />
             <Route path="/friendlist" element={<FriendList />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/edit" element={<ProfileEdit />} />
             <Route path="/post/:id" element={<Post />} />
             <Route path="/post/edit/:id" element={<PostEdit />} />
           </Route>
