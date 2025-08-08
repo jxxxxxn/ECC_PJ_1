@@ -100,10 +100,7 @@ export const LinkUpload = () => {
               }}
             >
               <div className="body2">Private</div>
-              <button
-                onClick={handleClick}
-                style={{ borderWidth: 0, backgroundColor: "transparent" }}
-              >
+              <button onClick={handleClick} style={{ all: "unset" }}>
                 {!isChecked ? (
                   <img src={unchecked} alt="unclick" />
                 ) : (
