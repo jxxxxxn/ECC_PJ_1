@@ -3,7 +3,6 @@ import { Home, FriendList, LinkUpload, MyPage, Post, PostEdit } from "./pages";
 import { MainLayout } from "./components";
 import { Login, LoginOk, SignUp, SetNickname } from "./pages/login";
 import ProfileEdit from "./pages/mypage/ProfileEdit";
-import ProfileEdit from "./pages/mypage/ProfileEdit";
 
 const App = () => {
   return (

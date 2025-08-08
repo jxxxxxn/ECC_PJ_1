@@ -83,7 +83,6 @@ export default function ProfileCard() {
           <ProfileTextGroup>
             <EmailText>{email}</EmailText>
             <IdText>{userId}</IdText>
-            <IdText>{userId}</IdText>
           </ProfileTextGroup>
         </ProfileInfoGroup>
         <Link to={`/mypage/edit`} style={{ textDecoration: `none` }}>
