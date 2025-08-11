@@ -1,13 +1,11 @@
 import styled from 'styled-components';
 import cameraIcon from '../../assets/icons/camera.svg';
-import checkedIcon from '../../assets/icons/CheckNick.png';
-import uncheckedIcon from '../../assets/icons/unchecked.png';
 
 // 전체 컨테이너
 const Container = styled.div`
   width: 100%;
   max-width: 800px;
-  padding: 100px 25px;
+  padding: 35px 25px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -93,12 +91,6 @@ const PasswordInput = styled(InputWrapper)`
   width: 600px;
 `;
 
-const Icon = styled.img`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-`;
-
 // 프로필 & 사진 변경
 const ProfileSection = styled.div`
   width: 100%;
@@ -122,13 +114,17 @@ const ProfileImageIcon = styled.img`
   height: 45px;
 `;
 
-const ChangePhotoButton = styled.div`
+// 사진 변경 버튼
+const ChangePhotoButton = styled.button`
   background: #F0F0F0;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
-  padding: 19px 23px;
+  padding: 19px 25px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  cursor: pointer;
 `;
 
 const ChangePhotoText = styled.div`
@@ -183,11 +179,9 @@ const PfEditSocial = () => {
           <PasswordSection>
             <PasswordField>
               <PasswordInput placeholder="소셜 로그인은 해당 사이트에서 비밀번호를 변경할 수 없습니다" />
-              <Icon src={checkedIcon} />
             </PasswordField>
             <PasswordField>
               <PasswordInput placeholder="소셜 로그인은 해당 사이트에서 비밀번호를 변경할 수 없습니다" />
-              <Icon src={uncheckedIcon} />
             </PasswordField>
           </PasswordSection>
         </Field>

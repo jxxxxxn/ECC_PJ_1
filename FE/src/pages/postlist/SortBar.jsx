@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import downArrow from "../assets/icons/down-arrow.svg";
+import downArrow from "../../assets/icons/down-arrow.svg";
 
 // 전체 Wrapper
 const Container = styled.div`

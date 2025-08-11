@@ -38,19 +38,6 @@ const Username = styled.div`
   word-wrap: break-word;
 `;
 
-const FollowButton = styled.button`
-  width: 80px;
-  height: 37px;
-  background: rgba(255, 160, 122, 0.7);
-  border-radius: 30px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  font-family: 'Pretendard';
-  font-weight: 500;
-  color: black;
-`;
-
 export default function FriendCard() {
   return (
     <CardWrapper>

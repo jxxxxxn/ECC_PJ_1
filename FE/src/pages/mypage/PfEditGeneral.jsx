@@ -1,13 +1,13 @@
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import PWCheckButton from '../../components/PWCheckButton';
 import cameraIcon from '../../assets/icons/camera.svg';
-import checkedIcon from '../../assets/icons/CheckNick.png';
-import uncheckedIcon from '../../assets/icons/unchecked.png';
 
 // 전체 컨테이너
 const Container = styled.div`
   width: 100%;
   max-width: 800px;
-  padding: 100px 25px;
+  padding: 35px 25px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -88,12 +88,6 @@ const PasswordInput = styled(InputWrapper)`
   width: 600px;
 `;
 
-const Icon = styled.img`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-`;
-
 // 프로필 & 사진 변경
 const ProfileSection = styled.div`
   width: 100%;
@@ -117,13 +111,17 @@ const ProfileImageIcon = styled.img`
   height: 45px;
 `;
 
-const ChangePhotoButton = styled.div`
+// 사진 변경 버튼
+const ChangePhotoButton = styled.button`
   background: #F0F0F0;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
-  padding: 19px 23px;
+  padding: 19px 25px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  cursor: pointer;
 `;
 
 const ChangePhotoText = styled.div`
@@ -136,6 +134,7 @@ const ChangePhotoText = styled.div`
 // 저장 버튼
 const SaveButton = styled.button`
   background: #FFE3D7;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
   padding: 18px 30px;
   display: flex;
@@ -154,6 +153,11 @@ const SaveText = styled.span`
 
 
 const PfEditGeneral = () => {
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+
+  const isMatch = password !== '' && password === confirm;
+
   return (
     <Container>
       <InputSection>
@@ -177,12 +181,22 @@ const PfEditGeneral = () => {
           <Label>비밀번호</Label>
           <PasswordSection>
             <PasswordField>
-              <PasswordInput placeholder="비밀번호 입력" />
-              <Icon src={checkedIcon} />
+              <PasswordInput 
+                type="password"
+                placeholder="비밀번호 입력"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} 
+              />
+              <PWCheckButton />
             </PasswordField>
             <PasswordField>
-              <PasswordInput placeholder="비밀번호 확인" />
-              <Icon src={uncheckedIcon} />
+              <PasswordInput 
+                type="password"
+                placeholder="비밀번호 확인"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+              />
+              <PWCheckButton isMatch={isMatch} />
             </PasswordField>
           </PasswordSection>
         </Field>

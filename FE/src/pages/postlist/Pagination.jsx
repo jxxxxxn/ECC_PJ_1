@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-const PagenationWrapper = styled.div`
+const PaginationWrapper = styled.div`
   width: 100%;
   justify-content: center;
   display: flex;
@@ -17,7 +17,6 @@ const PageList = styled.div`
 const PageButton = styled.div`
   width: 15px;
   height: 40px;
-  position: relative; /* 자식 Underline의 기준 */
   cursor: pointer;
 `;
 
@@ -29,17 +28,10 @@ const PageNumber = styled.div`
   text-align: center;
   line-height: 40px;
   user-select: none;
-  padding-left: ${({ page }) =>
-    page === 1 ? "3px" : page === 2 ? "2px" : "1px"};
-`;
 
-const Underline = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: black;
+  text-decoration: ${({ $active }) => ($active ? "underline" : "none")};
+  text-underline-offset: 8px;
+  text-decoration-thickness: 1.5px;
 `;
 
 const NextButton = styled.div`
@@ -55,17 +47,21 @@ const NextButton = styled.div`
   user-select: none;
 `;
 
-const Pagenation = ({ totalPages = 5 }) => {
+const Pagination = ({ totalPages = 5 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <PagenationWrapper>
+    <PaginationWrapper>
       <PageList>
         {pages.map((page) => (
           <PageButton key={page} onClick={() => setCurrentPage(page)}>
-            <PageNumber page={page}>{page}</PageNumber>
-            {page === currentPage && <Underline />}
+            <PageNumber
+              page={page}
+              $active={page === currentPage}
+            >
+              {page}
+            </PageNumber>
           </PageButton>
         ))}
       </PageList>
@@ -76,8 +72,8 @@ const Pagenation = ({ totalPages = 5 }) => {
       >
         next &gt;
       </NextButton>
-    </PagenationWrapper>
+    </PaginationWrapper>
   );
 };
 
-export default Pagenation;
+export default Pagination;
