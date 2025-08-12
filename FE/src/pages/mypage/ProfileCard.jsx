@@ -47,8 +47,8 @@ const IdText = styled.div`
 
 const ProfileButton = styled.div`
   width: 180px;
-  height: 45px;
-  padding: 15px 55px;
+  height: 40px;
+  padding: 15px 45px;
   background: #ffe3d7;
   border-radius: 50px;
   display: flex;

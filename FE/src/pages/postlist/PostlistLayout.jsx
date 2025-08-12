@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import SortBar from "../components/SortBar";
-import Pagenation from "../components/Pagenation";
-import externalLink from "../assets/icons/external-link.svg";
+import SortBar from "./SortBar";
+import Pagination from "./Pagination";
+import externalLink from "../../assets/icons/external-link.svg";
 import { useNavigate } from "react-router-dom";
 
 const FrameWrapper = styled.div`
@@ -98,10 +98,11 @@ export default function PostlistLayout() {
 
   const contentData = [
     {
+      id: 1,
       title: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
       description: "내 여름 추구미....**",
     },
-    ...Array(5).fill({ title: "제목", description: "내용" }),
+    ...Array(5).fill({ title: "제목", description: "내용" }).map((item, i) => ({ ...item, id: i + 2 })),
   ];
 
   return (
@@ -111,21 +112,21 @@ export default function PostlistLayout() {
         <SortBar />
         <FrameWrapper>
           <InnerWrapper>
-            {contentData.map((item, index) => (
-              <div key={index} style={{ width: "100%" }}>
+            {contentData.map((item) => (
+              <div key={item.id} style={{ width: "100%" }}>
                 <ContentItem
                   title={item.title}
                   description={item.description}
-                  onClick={() => navigate(`/post/${index + 1}`)}
+                  onClick={() => navigate(`/post/${item.id}`)}
                 />
-                {index < contentData.length - 1 && <Divider />}
+                {item.id !== contentData[contentData.length - 1].id && <Divider />}
               </div>
             ))}
           </InnerWrapper>
         </FrameWrapper>
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Pagenation currentPage={1} totalPages={5} />
+        <Pagination currentPage={1} totalPages={5} />
       </div>
     </div>
   );

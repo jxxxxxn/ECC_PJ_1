@@ -17,7 +17,7 @@ const ContentWrapper = styled.div`
 // 검색 바
 const SearchBar = styled.input`
   width: 100%;
-  max-width: 1200px;
+  max-width: 1300px;
   height: 55px;
   margin: 0 auto;
 

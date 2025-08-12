@@ -125,7 +125,7 @@ const NicknameWrapper = styled.div`
   padding-left: 30px;
   align-items: center;
   gap: 15px;
-  cursor: "pointer";
+  cursor: pointer;
 `;
 const ProfileImage = styled.img`
   width: 45px;

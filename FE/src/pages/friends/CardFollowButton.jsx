@@ -5,6 +5,7 @@ const FollowButton = styled.button`
   width: 80px;
   height: 37px;
   background: ${({ isFollowing }) => (isFollowing ? "rgba(255, 160, 122, 0.7)" : "#F5F5F5")};
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
   border: none;
   cursor: pointer;
@@ -15,15 +16,15 @@ const FollowButton = styled.button`
 `;
 
 const CardFollowButton = () => {
-  const [followState, setFollowState] = useState(1); // 1: following, 0: follow
+  const [isFollowing, setIsFollowing] = useState(true); // true면 팔로잉, false면 팔로우
 
   const toggleFollow = () => {
-    setFollowState(prev => (prev === 1 ? 0 : 1));
+    setIsFollowing(prev => !prev);
   };
 
   return (
-    <FollowButton isFollowing={followState === 1} onClick={toggleFollow}>
-      {followState === 1 ? "팔로잉" : "팔로우"}
+    <FollowButton isFollowing={isFollowing} onClick={toggleFollow}>
+      {isFollowing ? "팔로잉" : "팔로우"}
     </FollowButton>
   );
 };
