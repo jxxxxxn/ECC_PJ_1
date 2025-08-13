@@ -40,12 +40,23 @@ const Container = styled.div`
 
 
 export default function FriendListCard() {
-  const friends = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // 예시 데이터
+  const friends = [
+    { id: 1, name: "홍길동" },
+    { id: 2, name: "김철수" },
+    { id: 3, name: "이영희" },
+    { id: 4, name: "박민수" },
+    { id: 5, name: "최수정" },
+    { id: 6, name: "홍길동" },
+    { id: 7, name: "김철수" },
+    { id: 8, name: "이영희" },
+    { id: 9, name: "박민수" },
+    { id: 10, name: "최수정" },
+  ];
 
   return (
     <Container>
-      {friends.map((friend, index) => (
-        <FriendCard key={index} />
+      {friends.map((friend) => (
+        <FriendCard key={friend.id} friend={friend} />
       ))}
     </Container>
   );

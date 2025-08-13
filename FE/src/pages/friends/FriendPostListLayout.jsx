@@ -3,6 +3,7 @@ import PostCategory from "../../components/PostCategory";
 import SortBar from "../../components/SortBar";
 import Pagination from "../../components/Pagination";
 import externalLink from "../../assets/icons/external-link.svg";
+import rescrapPin from "../../assets/icons/pin_fill.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -31,6 +32,7 @@ const HeaderWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
 `;
 
 const Item = styled.div`
@@ -61,6 +63,7 @@ const Description = styled.div`
   font-size: 20px;
   font-family: "Pretendard", sans-serif;
   font-weight: 400;
+  margin-bottom: 5px;
 `;
 
 const Divider = styled.div`
@@ -71,70 +74,68 @@ const Divider = styled.div`
   margin-bottom: 0px;
 `;
 
-const IconWrapper = styled.div`
+const Icon = styled.img`
   width: 35px;
   height: 35px;
   align-items: center;
+  objectFit: "contain",
   flex-shrink: 0;
 `;
 
-const Icon = () => {
-  return (
-    <img
-      src={externalLink}
-      alt="아이콘"
-      style={{
-        width: "35px",
-        height: "35px",
-        objectFit: "contain",
-      }}
-    />
-  );
-};
+// 재스크랩
+const RescrapTag = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #767676;
+  font-size: 16px;
+  font-family: Pretendard, sans-serif;
+  font-weight: 400;
+`;
 
-const ContentItem = ({ title, description, onClick }) => (
+const RescrapIcon = styled.img`
+  width: 15px;
+  height: 15px;
+`;
+
+const ContentItem = ({ title, description, onClick, isRescrapped }) => (
   <Item onClick={onClick} style={{ cursor: "pointer" }}>
     <TextWrapper>
       <Title>{title}</Title>
       <Description>{description}</Description>
+      {isRescrapped && (
+        <RescrapTag>
+          <RescrapIcon src={rescrapPin} />
+          [내가 한 재스크랩]
+        </RescrapTag>
+      )}
     </TextWrapper>
-    <IconWrapper>
-      <Icon />
-    </IconWrapper>
+    <Icon src={externalLink} />
   </Item>
 );
 
-export default function PostlistLayout() {
+export default function FriendPostListLayout({ posts }) {
   const [activeTab, setActiveTab] = useState("all");
   const navigate = useNavigate();
 
-  const contentData = [
-    {
-      id: 1,
-      title: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
-      description: "내 여름 추구미....**",
-    },
-    ...Array(5).fill({ title: "제목", description: "내용" }).map((item, i) => ({ ...item, id: i + 2 })),
-  ];
-
   return (
-    // 중앙정렬
-    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+    <div style={{ display: "flex", flexDirection: "column", width: "100%", gap: "10px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <HeaderWrapper>
           <PostCategory activeTab={activeTab} onTabClick={setActiveTab} />
           <SortBar />
         </HeaderWrapper>
         <FrameWrapper>
           <InnerWrapper>
-            {contentData.map((item) => (
+            {posts.map((item) => (
               <div key={item.id} style={{ width: "100%" }}>
                 <ContentItem
                   title={item.title}
                   description={item.description}
+                  isRescrapped={item.isRescrapped} 
                   onClick={() => navigate(`/post/${item.id}`)}
                 />
-                {item.id !== contentData[contentData.length - 1].id && <Divider />}
+                {item.id !== posts[posts.length - 1].id && <Divider />}
               </div>
             ))}
           </InnerWrapper>

@@ -1,10 +1,7 @@
 import { PostlistLayout } from './postlist';
-import PostCategory from "./postlist/PostCategory";
 import { PageHeader } from "../components/PageHeader";
-import { useState } from "react";
 
 export const Home = () => {
-  const [activeTab, setActiveTab] = useState("all");
   return (
     <div
       style={{
@@ -17,7 +14,6 @@ export const Home = () => {
       }}
     >
       <PageHeader title="링크집" />
-      <PostCategory activeTab={activeTab} onTabClick={setActiveTab} />
       <PostlistLayout />
     </div>
   );

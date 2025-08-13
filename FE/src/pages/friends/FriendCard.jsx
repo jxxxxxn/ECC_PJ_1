@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
 import profile from "../../assets/profile.jpg";
 import CardFollowButton from "./CardFollowButton"; 
 
@@ -28,22 +29,30 @@ const ProfileImage = styled.img`
   border-radius: 50%;
 `;
 
-const Username = styled.div`
+const Username = styled(Link)`
   width: 139px;
   text-align: center;
   color: black;
   font-size: 20px;
   font-family: 'Pretendard';
   font-weight: 600;
-  word-wrap: break-word;
+
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
-export default function FriendCard() {
+export default function FriendCard({ friend }) { // 추후에 ID_is_myfriend -> {friend.id} 수정
   return (
     <CardWrapper>
       <ProfileContainer>
-        <ProfileImage src={profile} alt="친구 프로필" />
-        <Username>ID_is_myfriend</Username>
+        <ProfileImage src={profile} alt="친구 프로필" /> 
+        <Username to={`/friends/${friend.id}`}>
+          ID_is_myfriend
+        </Username>
       </ProfileContainer>
       <CardFollowButton/>
     </CardWrapper>
