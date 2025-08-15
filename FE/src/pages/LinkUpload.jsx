@@ -199,15 +199,6 @@ const NoteBox = styled.input`
   }
 `;
 
-const CategoryBox = styled.select`
-  width: 50%;
-  height: 55px;
-  border-radius: 30px;
-  background-color: rgba(255, 255, 255, 0.7);
-  border: 1px solid #909090;
-  padding-left: 15px;
-`;
-
 const LoginButton = styled.button`
   border-radius: 30px;
   background-color: #ffe3d7;
