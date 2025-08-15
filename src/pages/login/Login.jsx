@@ -97,19 +97,20 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 167px;
+  gap: 100px;
   padding-top: 87px;
 `;
 const HomeLogo = styled.img`
-  width: 650px;
-  height: 650px;
+  width: 400px;
+  height: 400px;
+  margin-bottom: 30px;
 `;
 
 // 주황색 박스
 const LoginBox = styled.div`
   border-radius: 100px;
-  width: 700px;
-  height: 800px;
+  width: 100%;
+  height: 100%;
   background-color: rgba(255, 160, 122, 0.3);
   display: flex;
   flex-direction: column;
@@ -120,8 +121,8 @@ const LoginBox = styled.div`
 
 // 아이디, 비밀번호 받는 텍스트 박스
 const TextBox = styled.input`
-  width: 515px;
-  height: 59px;
+  width: 100%;
+  height: 50px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.7);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
