@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import "../styles/TextStyle.css";
 
+// 버튼 1개 모달입니당
 export const ConfirmModal = ({ buttonText = "", content = "", onClick }) => {
   return (
     <ModalOverlay>

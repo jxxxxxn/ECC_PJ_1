@@ -1,23 +1,38 @@
 import styled from "styled-components";
 import "../styles/TextStyle.css";
+import { useState } from "react";
 
-// 버튼 두개 모달입니당
-export const PopupModal = ({
+export const CategoryAdd = ({
   buttonText1 = "",
   buttonText2 = "",
   content = "",
   onClick1,
   onClick2,
 }) => {
+  const [categoryName, setCategoryName] = useState("");
+
   return (
     <ModalOverlay>
       <ModalBox>
-        <ModalContent className="body2">{content}</ModalContent>
+        <ModalContent className="body2">
+          <div>{content}</div>{" "}
+          <TextBox
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+          />
+        </ModalContent>
         <ButtonWrapper>
           <GrayButton onClick={onClick1}>
             <ButtonText>{buttonText1}</ButtonText>
           </GrayButton>
-          <OrangeButton onClick={onClick2}>
+          <OrangeButton
+            onClick={() => onClick2?.(categoryName)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") onClick2?.(categoryName);
+            }}
+          >
             <ButtonText>{buttonText2}</ButtonText>
           </OrangeButton>
         </ButtonWrapper>
@@ -37,9 +52,22 @@ const ModalOverlay = styled.div`
   height: 100vh;
 `;
 
+const TextBox = styled.input`
+  all: unset;
+  display: flex;
+  justify-content: center;
+  width: 250px;
+  height: 40px;
+  border-radius: 30px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+  background-color: #f0f0f0;
+  padding-left: 20px;
+  font-size: 15px;
+`;
+
 const ModalBox = styled.div`
   width: 350px;
-  height: 170px;
+  height: 200px;
   background-color: #ffffff;
   border: 1px solid #d9d9d9;
   border-radius: 15px;
@@ -53,7 +81,9 @@ const ModalContent = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 35px;
+  padding: 28px;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const ButtonWrapper = styled.div`

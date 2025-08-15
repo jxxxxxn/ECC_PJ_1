@@ -4,16 +4,25 @@ import unchecked from "../assets/icons/Unchecked.png";
 import checked from "../assets/icons/CheckNick.png";
 import "../styles/TextStyle.css";
 import { useState } from "react";
+import CategoryDropdown from "../components/CategoryBox";
+import { CategoryAdd, PopupModal } from "../components";
+import { useNavigate } from "react-router-dom";
 
 export const LinkUpload = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [scrapTitle, setScrapTitle] = useState("");
   const [scrapLink, setScrapLink] = useState("");
   const [scrapMemo, setScrapMemo] = useState("");
+  const [category, setCategory] = useState(null);
+  const [categories, setCategories] = useState(["운동", "취미", "카페"]);
+  const navigate = useNavigate();
 
   const handleClick = () => {
     setIsChecked(!isChecked);
   };
+
+  const [viewModal, setViewModal] = useState(false);
+  const [viewSaveModal, setViewSaveModal] = useState(false);
 
   return (
     <div
@@ -61,7 +70,15 @@ export const LinkUpload = () => {
             gap: 150,
           }}
         >
-          <CategoryBox />
+          <CategoryDropdown
+            value={category}
+            options={categories}
+            onChange={setCategory}
+            onAdd={() => {
+              console.log("open");
+              setViewModal(true);
+            }}
+          />
           <div
             style={{
               display: "flex",
@@ -111,7 +128,43 @@ export const LinkUpload = () => {
           </div>
         </div>
       </ScrapWrapper>
-      <LoginButton className="body2">찝기</LoginButton>
+      <LoginButton className="body2" onClick={() => setViewSaveModal(true)}>
+        찝기
+      </LoginButton>
+      {viewModal && (
+        <CategoryAdd
+          content="어떤 카테고리를 추가할까요?"
+          buttonText1="취소"
+          buttonText2="저장"
+          onClick1={() => setViewModal(false)}
+          onClick2={(categoryName) => {
+            if (!categoryName) return;
+            const exists = categories.some(
+              (c) =>
+                c.trim().toLowerCase() === categoryName.trim().toLowerCase()
+            );
+            if (exists) {
+              setViewModal(false);
+              return;
+            }
+            setCategories((prev) => [...prev, categoryName]);
+            setCategory(categoryName);
+            setViewModal(false);
+          }}
+        />
+      )}
+      {viewSaveModal && (
+        <PopupModal
+          content="게시글을 저장하시겠습니까?"
+          buttonText1="취소"
+          buttonText2="저장"
+          onClick1={() => setViewSaveModal(false)}
+          onClick2={() => {
+            setViewSaveModal(false);
+            navigate("/home");
+          }}
+        />
+      )}
     </div>
   );
 };
@@ -146,7 +199,7 @@ const NoteBox = styled.input`
   }
 `;
 
-const CategoryBox = styled.div`
+const CategoryBox = styled.select`
   width: 50%;
   height: 55px;
   border-radius: 30px;
