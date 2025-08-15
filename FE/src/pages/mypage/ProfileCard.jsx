@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 import profile from "../../assets/profile.jpg";
 
 
@@ -14,13 +15,6 @@ const ProfileInfoGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
-`;
-
-const ProfileImageBg = styled.div`
-  width: 120px;
-  height: 120px;
-  background: #ffe0d3;
-  border-radius: 9999px;
 `;
 
 const ProfileImage = styled.img`
@@ -53,8 +47,8 @@ const IdText = styled.div`
 
 const ProfileButton = styled.div`
   width: 180px;
-  height: 45px;
-  padding: 15px 55px;
+  height: 40px;
+  padding: 15px 45px;
   background: #ffe3d7;
   border-radius: 50px;
   display: flex;
@@ -72,7 +66,7 @@ const ProfileButton = styled.div`
 /* ===== MyPageCard 컴포넌트 ===== */
 export default function ProfileCard() {
   const email = "email: ewha12345678@ewha.ac.kr";
-  const Id = "ID_is_ewhawuniv"
+  const userId = "ID_is_ewhawuniv"
 
   return (
       <ProfileWrapper>
@@ -81,10 +75,14 @@ export default function ProfileCard() {
           <ProfileImage src={profile} alt="프로필" />
           <ProfileTextGroup>
             <EmailText>{email}</EmailText>
-            <IdText>{Id}</IdText>
+            <IdText>{userId}</IdText>
           </ProfileTextGroup>
         </ProfileInfoGroup>
-        <ProfileButton>프로필/회원정보 수정</ProfileButton>
+        <Link to={`/mypage/edit`} style={{ textDecoration: `none` }}>
+          <ProfileButton>
+            프로필/회원정보 수정
+          </ProfileButton>
+        </Link>
       </ProfileWrapper>
   );
 }

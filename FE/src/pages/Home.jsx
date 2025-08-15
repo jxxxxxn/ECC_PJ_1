@@ -1,5 +1,5 @@
-import { PostlistLayout } from "../components";
-import PostCategory from "../components/PostCategory";
+import { PostlistLayout } from './postlist';
+import PostCategory from "./postlist/PostCategory";
 import { PageHeader } from "../components/PageHeader";
 import { useState } from "react";
 
