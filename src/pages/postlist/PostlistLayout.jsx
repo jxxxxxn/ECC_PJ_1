@@ -114,7 +114,7 @@ export default function PostlistLayout() {
       title: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
       description: "내 여름 추구미....**",
     },
-    ...Array(5)
+    ...Array(4)
       .fill({ title: "제목", description: "내용" })
       .map((item, i) => ({ ...item, id: i + 2 })),
   ];
