@@ -17,11 +17,11 @@ const FrameWrapper = styled.div`
 const InnerWrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding: 15px 0;
+  padding: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 `;
 
 const HeaderWrapper = styled.div`
@@ -39,7 +39,7 @@ const Item = styled.div`
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 30px 30px;
+  padding: 15px 35px;
 `;
 
 const TextWrapper = styled.div`
@@ -50,7 +50,7 @@ const TextWrapper = styled.div`
 
 const Title = styled.div`
   color: black;
-  font-size: 20px;
+  font-size: 22px;
   font-family: "Pretendard", sans-serif;
   font-weight: 400;
   margin-bottom: 5px;
@@ -58,7 +58,7 @@ const Title = styled.div`
 
 const Description = styled.div`
   color: #767676;
-  font-size: 20px;
+  font-size: 18px;
   font-family: "Pretendard", sans-serif;
   font-weight: 400;
 `;
@@ -114,7 +114,9 @@ export default function PostlistLayout() {
       title: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
       description: "내 여름 추구미....**",
     },
-    ...Array(5).fill({ title: "제목", description: "내용" }).map((item, i) => ({ ...item, id: i + 2 })),
+    ...Array(5)
+      .fill({ title: "제목", description: "내용" })
+      .map((item, i) => ({ ...item, id: i + 2 })),
   ];
 
   return (
@@ -134,7 +136,9 @@ export default function PostlistLayout() {
                   description={item.description}
                   onClick={() => navigate(`/post/${item.id}`)}
                 />
-                {item.id !== contentData[contentData.length - 1].id && <Divider />}
+                {item.id !== contentData[contentData.length - 1].id && (
+                  <Divider />
+                )}
               </div>
             ))}
           </InnerWrapper>

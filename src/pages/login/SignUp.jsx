@@ -52,7 +52,7 @@ export const SignUp = () => {
               <div style={{ paddingLeft: 10 }}>비밀번호</div>
               <TextBox
                 type="password"
-                style={{ fontSize: 35 }}
+                style={{ fontSize: 30 }}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -74,7 +74,7 @@ export const SignUp = () => {
               </div>
               <TextBox
                 type="password"
-                style={{ fontSize: 35 }}
+                style={{ fontSize: 30 }}
                 value={checkPassword}
                 onChange={(e) => setCheckPassword(e.target.value)}
               />
@@ -94,12 +94,12 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 167px;
-  padding-top: 87px;
+  gap: 100px;
+  padding-top: 50px;
 `;
 const HomeLogo = styled.img`
-  width: 650px;
-  height: 650px;
+  width: 500px;
+  height: 500px;
 `;
 
 // 주황색 박스
@@ -119,7 +119,6 @@ const LoginButton = styled.button`
   border-radius: 30px;
   background-color: #ffbda2;
   padding: 10px;
-  width: 150;
   display: flex;
   justify-content: center;
   color: #ffffff;
@@ -139,11 +138,12 @@ const InfoWrapper = styled.div`
 // 아이디, 비밀번호 받는 텍스트 박스
 const TextBox = styled.input`
   width: 515px;
-  height: 59px;
+  height: 50px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.7);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   border-width: 0;
-  font-size: 20px;
+  font-size: 16px;
   padding-left: 15px;
+  outline: none;
 `;

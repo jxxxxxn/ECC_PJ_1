@@ -9,6 +9,7 @@ import peopleUnclick from "../assets/icons/people-unclick.png";
 import clipClick from "../assets/icons/clip-click.png";
 import clipUnclick from "../assets/icons/clip-unclick.png";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
+import search from "../assets/icons/search.png";
 
 export const MainLayout = () => {
   const navigate = useNavigate();
@@ -44,7 +45,10 @@ export const MainLayout = () => {
       </Sidebar>
       <Main>
         <Header>
-          <SearchBar />
+          <SearchWrapper>
+            <img src={search} alt="검색" width="24" height="24" />
+            <SearchBar />
+          </SearchWrapper>
           <NicknameWrapper onClick={() => navigate("/mypage")}>
             <ProfileImage src={profile} alt="basic profile" />
             <div className="body1">Nickname</div>
@@ -111,14 +115,30 @@ const Header = styled.div`
   justify-content: left;
   align-items: center;
 `;
+
 const SearchBar = styled.input`
   flex: 1;
   min-width: 200px; // 이거 얼마나 할건지! 반응형 어떻게??
   height: 40px;
-  border-radius: 30px;
-  background-color: #f0f0f0;
-  border-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 18px;
+  margin-left: 10px;
 `;
+
+const SearchWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 30px;
+  min-width: 200px;
+  height: 40px;
+  padding: 0 15px;
+  gap: 5px;
+`;
+
 const NicknameWrapper = styled.div`
   display: flex;
   flex-direction: row;

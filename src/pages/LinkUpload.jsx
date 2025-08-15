@@ -176,7 +176,7 @@ const TextBox = styled.input`
   background-color: rgba(255, 255, 255, 0.7);
   border-width: 1px;
   border-color: #909090;
-  font-size: 20px;
+  font-size: 18px;
   padding-left: 15px;
   outline: none;
   ::placeholder {
@@ -191,7 +191,7 @@ const NoteBox = styled.input`
   background-color: rgba(255, 255, 255, 0.7);
   border-width: 1px;
   border-color: #909090;
-  font-size: 20px;
+  font-size: 18px;
   padding-left: 15px;
   outline: none;
   ::placeholder {

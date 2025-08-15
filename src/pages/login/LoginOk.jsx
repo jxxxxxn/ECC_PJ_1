@@ -3,46 +3,6 @@ import styled from "styled-components";
 import "../../styles/TextStyle.css";
 import { useNavigate } from "react-router-dom";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 167px;
-  padding-top: 87px;
-`;
-const HomeLogo = styled.img`
-  width: 650px;
-  height: 650px;
-`;
-
-// 주황색 박스
-const LoginBox = styled.div`
-  border-radius: 100px;
-  width: 765px;
-  height: 906px;
-  background-color: rgba(255, 160, 122, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 35px;
-`;
-
-const LoginButton = styled.button`
-  border-radius: 30px;
-  background-color: #ffbda2;
-  padding: 10px;
-  width: 150;
-  display: flex;
-  justify-content: center;
-  color: #2f2f2f;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  width: 154px;
-  border-width: 0;
-  cursor: pointer;
-`;
-
 export const LoginOk = () => {
   const navigate = useNavigate();
 
@@ -59,9 +19,20 @@ export const LoginOk = () => {
           }}
         >
           <LoginBox>
-            로그인 성공 페이지
-            <LoginButton className="heading3" onClick={() => navigate("/home")}>
-              Enter
+            <div
+              style={{
+                textAlign: "center",
+                letterSpacing: 2,
+                lineHeight: "150%",
+                fontSize: 30,
+              }}
+            >
+              집게 장전 완료!
+              <br />
+              이제 링크를 하나씩 담아보세요.
+            </div>
+            <LoginButton className="heading4" onClick={() => navigate("/home")}>
+              시작하기
             </LoginButton>
           </LoginBox>
         </div>
@@ -69,3 +40,43 @@ export const LoginOk = () => {
     </>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  padding-top: 50px;
+`;
+const HomeLogo = styled.img`
+  width: 500px;
+  height: 500px;
+`;
+
+// 주황색 박스
+const LoginBox = styled.div`
+  border-radius: 100px;
+  width: 700px;
+  height: 800px;
+  background-color: rgba(255, 160, 122, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 35px;
+`;
+
+const LoginButton = styled.button`
+  border-radius: 30px;
+  background-color: #ffbda2;
+  padding: 10px;
+  width: 150;
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  width: 154px;
+  border-width: 0;
+  cursor: pointer;
+`;

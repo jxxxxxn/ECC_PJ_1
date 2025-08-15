@@ -34,7 +34,7 @@ export default function CategoryDropdown({
     <Wrap ref={ref} style={{ width }}>
       <Trigger onClick={() => setOpen((o) => !o)} aria-expanded={open}>
         <span
-          className="body2"
+          className="body3"
           style={{
             color: value ? "#000000" : "#909090",
             paddingLeft: 10,

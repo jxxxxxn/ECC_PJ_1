@@ -83,14 +83,13 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 167px;
-  padding-top: 87px;
+  gap: 100px;
+  padding-top: 50px;
 `;
 const HomeLogo = styled.img`
-  width: 650px;
-  height: 650px;
+  width: 500px;
+  height: 500px;
 `;
-
 // 주황색 박스
 const LoginBox = styled.div`
   border-radius: 100px;
