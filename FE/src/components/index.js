@@ -3,3 +3,5 @@ export { PageHeader } from "./PageHeader";
 export { default as FollowButton } from "./FollowButton";
 export { PopupModal } from "./PopupModal";
 export { ConfirmModal } from "./ConfirmModal";
+export { default as CategoryBox } from "./CategoryBox";
+export { CategoryAdd } from "./CategoryAdd";

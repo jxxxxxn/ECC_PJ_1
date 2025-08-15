@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import "../styles/TextStyle.css";
 
+// 버튼 1개 모달입니당
 export const ConfirmModal = ({ buttonText = "", content = "", onClick }) => {
   return (
     <ModalOverlay>
@@ -20,9 +21,10 @@ const ModalOverlay = styled.div`
   align-items: center;
   position: absolute;
   top: 0;
-  left: 100px;
-  width: 100vw;
-  height: 100vh;
+  left: 120px;
+  width: 95%;
+  height: 80vh;
+  align-self: center;
 `;
 
 const ModalBox = styled.div`
