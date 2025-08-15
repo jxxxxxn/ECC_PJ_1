@@ -98,7 +98,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: 100px;
-  padding-top: 50px;
 `;
 const HomeLogo = styled.img`
   width: 400px;
