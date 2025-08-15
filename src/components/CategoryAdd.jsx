@@ -8,6 +8,7 @@ export const CategoryAdd = ({
   content = "",
   onClick1,
   onClick2,
+  exists,
 }) => {
   const [categoryName, setCategoryName] = useState("");
 
@@ -20,7 +21,20 @@ export const CategoryAdd = ({
             value={categoryName}
             onChange={(e) => setCategoryName(e.target.value)}
           />
+          {exists && (
+            <div
+              style={{
+                fontSize: 12,
+                color: "#FE5D18",
+                marginBottom: -20,
+                marginTop: -5,
+              }}
+            >
+              이미 존재하는 카테고리입니다.
+            </div>
+          )}
         </ModalContent>
+
         <ButtonWrapper>
           <GrayButton onClick={onClick1}>
             <ButtonText>{buttonText1}</ButtonText>
