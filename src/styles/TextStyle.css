@@ -18,6 +18,11 @@
   font-size: 24px;
 }
 
+.heading5 {
+  font-weight: 600;
+  font-size: 20px;
+}
+
 .body1 {
   font-weight: 400;
   font-size: 24px;
@@ -31,4 +36,9 @@
 .body3 {
   font-weight: 400;
   font-size: 16px;
+}
+
+.body4 {
+  font-weight: 400;
+  font-size: 12px;
 }

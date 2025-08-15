@@ -25,7 +25,7 @@ const [password, setPassword] = useState(null);*/
         >
           <LoginBox>
             <div
-              className="heading2"
+              className="heading3"
               style={{
                 textAlign: "center",
                 letterSpacing: 2,
@@ -36,16 +36,16 @@ const [password, setPassword] = useState(null);*/
               <br />
               이제 다시 꺼내볼까요?
             </div>
-            <InfoWrapper className="body2">
+            <InfoWrapper className="body3">
               <div style={{ paddingLeft: 10 }}>아이디</div>
               <TextBox />
             </InfoWrapper>
-            <InfoWrapper className="body2">
+            <InfoWrapper className="body3">
               <div style={{ paddingLeft: 10 }}>비밀번호</div>
               <TextBox type="password" style={{ fontSize: 30 }} />
             </InfoWrapper>
             <LoginButton
-              className="heading4"
+              className="heading5"
               onClick={() => navigate("/loginok")}
             >
               로그인
@@ -63,11 +63,11 @@ const [password, setPassword] = useState(null);*/
               <div>OR</div>
               <Line />
             </div>
-            <GoogleButton className="body2">
+            <GoogleButton className="body3">
               <img
                 src={google}
                 alt="google signin"
-                style={{ width: 45, height: 45 }}
+                style={{ width: 30, height: 30 }}
               />
               Sign in with Google
             </GoogleButton>
@@ -77,7 +77,7 @@ const [password, setPassword] = useState(null);*/
                 flexDirection: "row",
                 letterSpacing: 2,
                 gap: 10,
-                fontSize: 20,
+                fontSize: 18,
               }}
             >
               Don't have an account?
@@ -98,7 +98,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   gap: 100px;
-  padding-top: 87px;
+  padding-top: 50px;
 `;
 const HomeLogo = styled.img`
   width: 400px;
@@ -109,8 +109,8 @@ const HomeLogo = styled.img`
 // 주황색 박스
 const LoginBox = styled.div`
   border-radius: 100px;
-  width: 100%;
-  height: 100%;
+  width: 30vw;
+  height: 60vh;
   background-color: rgba(255, 160, 122, 0.3);
   display: flex;
   flex-direction: column;
@@ -121,14 +121,15 @@ const LoginBox = styled.div`
 
 // 아이디, 비밀번호 받는 텍스트 박스
 const TextBox = styled.input`
-  width: 100%;
-  height: 50px;
+  width: 20vw;
+  height: 40px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.7);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   border-width: 0;
   font-size: 20px;
   padding-left: 15px;
+  outline: none;
 `;
 
 // 텍스트 + 텍스트박스
@@ -141,13 +142,12 @@ const InfoWrapper = styled.div`
 const LoginButton = styled.button`
   border-radius: 30px;
   background-color: #ffbda2;
-  padding: 10px;
-  width: 150;
+  padding: 5px;
+  width: 5vw;
   display: flex;
   justify-content: center;
   color: #ffffff;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  width: 154px;
   border-width: 0;
   cursor: pointer;
 `;
@@ -166,8 +166,8 @@ const GoogleButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
-  width: 350px;
+  height: 40px;
+  width: 250px;
   gap: 23px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   border-width: 0;
