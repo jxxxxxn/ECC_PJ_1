@@ -1,75 +1,98 @@
-import styled from "styled-components";
+import { useState } from "react";
+import styled, { keyframes } from "styled-components";
 import downArrow from "../assets/icons/down-arrow.svg";
+import { SortBarBox1, SortBarBox2 } from "./";
 
 // 전체 Wrapper
 const Container = styled.div`
   width: 100%;
-  height: 100%;
   display: inline-flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 24px; /* 버튼 사이 간격 */
+  gap: 24px;
+  position: relative;
 `;
 
-// 개별 버튼 그룹
 const ButtonGroup = styled.div`
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  gap: 4px;
-  position: relative; 
+  gap: 6px;
+  cursor: pointer;
+  position: relative; /* 드롭다운 absolute 기준 */
 `;
 
-// 텍스트 스타일
 const Label = styled.div`
   color: #595959;
   font-size: 18px;
   font-family: 'Pretendard';
   font-weight: 400;
   line-height: 40px;
-  word-wrap: break-word;
-`;
-
-// 아이콘 Wrapper
-const IconWrapper = styled.div`
-  width: 40px;
-  height: 40px;
-  position: relative; 
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
 `;
 
-// 아이콘 구성
-const Icon = () => {
-  return (
-    <img
-      src={downArrow}
-      alt="아이콘"
-      style={{
-        width: "24px", 
-        height: "24px",
-        objectFit: "contain",
-      }}
-    />
-  );
-};
+const Icon = styled.img`
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  transition: transform 0.2s;
+  transform: ${({ open }) => (open ? "rotate(180deg)" : "rotate(0deg)")};
+`;
+
+const slideDown = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const DropdownWrapper = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 2px;
+  z-index: 100;
+  animation: ${slideDown} 0.1s ease forwards;
+  border-radius: 10px;
+  background: white;
+`;
 
 const SortBar = () => {
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const handleClick = (btnId) => {
+    setOpenDropdown(openDropdown === btnId ? null : btnId); // 토글만
+  };
+
   return (
     <Container>
       <ButtonGroup>
-        <Label>카테고리</Label>
-        <IconWrapper>
-          <Icon />
-        </IconWrapper>
+        <Label onClick={() => handleClick(1)}>
+          카테고리
+          <Icon src={downArrow} alt="아이콘" open={openDropdown === 1} />
+        </Label>
+        {openDropdown === 1 && (
+          <DropdownWrapper style={{ left: "-25px" }}>
+            <SortBarBox1 />
+          </DropdownWrapper>
+        )}
       </ButtonGroup>
 
       <ButtonGroup>
-        <Label>시간순</Label>
-        <IconWrapper>
-          <Icon />
-        </IconWrapper>
+        <Label onClick={() => handleClick(2)}>
+          시간순
+          <Icon src={downArrow} alt="아이콘" open={openDropdown === 2} />
+        </Label>
+        {openDropdown === 2 && (
+          <DropdownWrapper style={{ left: "-35px" }}>
+            <SortBarBox2 />
+          </DropdownWrapper>
+        )}
       </ButtonGroup>
     </Container>
   );
