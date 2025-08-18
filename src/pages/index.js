@@ -3,5 +3,6 @@ export { FriendList } from "./FriendList";
 export { LinkUpload } from "./LinkUpload";
 export { Post } from "./Post";
 export { PostEdit } from "./PostEdit";
+export * from "./search";
 export * from "./friends";
 export * from "./mypage";
