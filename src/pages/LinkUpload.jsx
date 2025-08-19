@@ -3,10 +3,11 @@ import styled from "styled-components";
 import unchecked from "../assets/icons/Unchecked.png";
 import checked from "../assets/icons/CheckNick.png";
 import "../styles/TextStyle.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CategoryDropdown from "../components/CategoryBox";
 import { CategoryAdd, PopupModal } from "../components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const LinkUpload = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -14,8 +15,8 @@ export const LinkUpload = () => {
   const [scrapLink, setScrapLink] = useState("");
   const [scrapMemo, setScrapMemo] = useState("");
   const [category, setCategory] = useState(null);
-  const [categories, setCategories] = useState(["운동", "취미", "카페"]);
   const navigate = useNavigate();
+  const [catExistsError, setCatExistsError] = useState(false);
 
   const handleClick = () => {
     setIsChecked(!isChecked);
@@ -23,6 +24,29 @@ export const LinkUpload = () => {
 
   const [viewModal, setViewModal] = useState(false);
   const [viewSaveModal, setViewSaveModal] = useState(false);
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    axios
+      .get(
+        "http://eccteam1-env.eba-fpmvb3id.us-east-1.elasticbeanstalk.com/api/categories",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        const list = Array.isArray(res.data?.data) ? res.data.data : res.data;
+        if (mounted) setCategories(list);
+        console.log("조회 성공:", list);
+      })
+      .catch((err) => {
+        console.log("조회 실패: ", err.response?.data || err.message);
+      });
+  }, []);
 
   return (
     <div
@@ -72,10 +96,10 @@ export const LinkUpload = () => {
         >
           <CategoryDropdown
             value={category}
-            options={categories}
+            options={categories.map((c) => c.categoryName)}
             onChange={setCategory}
             onAdd={() => {
-              console.log("open");
+              setCatExistsError(false); // 열 때 초기화
               setViewModal(true);
             }}
           />
@@ -137,20 +161,38 @@ export const LinkUpload = () => {
           buttonText1="취소"
           buttonText2="저장"
           onClick1={() => setViewModal(false)}
-          onClick2={(categoryName) => {
-            if (!categoryName) return;
+          onClick2={async (categoryName) => {
+            const name = categoryName?.trim();
+            if (!name) return;
+
+            // 중복 검사 (대소문자 무시)
             const exists = categories.some(
-              (c) =>
-                c.trim().toLowerCase() === categoryName.trim().toLowerCase()
+              (c) => c.categoryName.trim().toLowerCase() === name.toLowerCase()
             );
             if (exists) {
-              setViewModal(false);
+              setCatExistsError(true);
               return;
             }
-            setCategories((prev) => [...prev, categoryName]);
-            setCategory(categoryName);
-            setViewModal(false);
+
+            try {
+              const res = await axios.post(
+                "http://eccteam1-env.eba-fpmvb3id.us-east-1.elasticbeanstalk.com/api/categories",
+                { categoryName: name },
+                { headers: { "Content-Type": "application/json" } }
+              );
+              const created = res.data?.data ?? res.data;
+              setCategories((prev) => [...prev, created]);
+              setCategory(created.categoryName);
+              setCatExistsError(false);
+              setViewModal(false);
+            } catch (err) {
+              console.log(
+                "카테고리 추가 실패: ",
+                err.response?.data || err.message
+              );
+            }
           }}
+          exists={catExistsError}
         />
       )}
       {viewSaveModal && (
