@@ -4,14 +4,19 @@ import link from "../assets/icons/link2.png";
 import note from "../assets/icons/note.png";
 import starFill from "../assets/icons/star_fill.png";
 import starEmpty from "../assets/icons/star_line.png";
+import comment from "../assets/icons/comment.png";
 import copy from "../assets/icons/copy.png";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Pagination } from "../components";
+//import axios from "axios";
+//import { api } from "../lib/api";
 
 export const Post = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  //const [contentData, setContentData] = useState(null);
 
   const contentData = {
     scrapTitle: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
@@ -19,6 +24,28 @@ export const Post = () => {
     scrapMemo: "내 여름 추구미....**",
     category: "여름",
   };
+
+  /*useEffect(() => {
+    if (!id) return;
+    api
+      .get(`/scraps/${id}`)
+      .then(({ data }) => {
+        const item = data?.data ?? data;
+        console.log("[scrap 조회 성공]", item);
+        setContentData(item);
+      })
+      .catch((err) => {
+        console.log(
+          "[scrap 조회 실패]",
+          err.response?.status,
+          err.response?.data || err.message
+        );
+      });
+  }, [id]);
+
+  if (!contentData) {
+    return <div style={{ padding: 40 }}>불러오는 중…</div>;
+  }*/
 
   const handleCopy = async () => {
     try {
@@ -36,25 +63,24 @@ export const Post = () => {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: "15px",
       }}
     >
       <MainWrapper>
-        <div style={{ paddingLeft: 40, paddingTop: 60 }}>
+        <div style={{ paddingLeft: 40, marginRight: 40 }}>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingRight: 70,
             }}
           >
-            <div
-              style={{ fontSize: 22, marginBottom: 11 }}
-            >{`<${contentData.category}>`}</div>
-            <ActiveButton onClick={() => navigate(`/post/edit/${id}`)}>
-              수정하기
-            </ActiveButton>
+            <div style={{ fontSize: 20, marginBottom: 11 }}>카테고리</div>
+            <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+              <ActiveButton onClick={() => navigate(`/post/edit/${id}`)}>
+                수정
+              </ActiveButton>
+              <InativeButton>삭제</InativeButton>
+            </div>
           </div>
           <div
             style={{
@@ -69,10 +95,10 @@ export const Post = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 20,
-                marginBottom: 26,
+                marginBottom: 15,
               }}
             >
-              <div className="heading2">{contentData.scrapTitle}</div>
+              <div className="heading3">{contentData?.scrapTitle ?? ""}</div>
               <button
                 style={{
                   all: "unset",
@@ -93,7 +119,6 @@ export const Post = () => {
                 borderWidth: 0,
                 backgroundColor: "transparent",
                 marginBottom: 7,
-                paddingRight: 70,
               }}
             ></button>
           </div>
@@ -108,23 +133,31 @@ export const Post = () => {
           >
             <img src={link} alt="link icon" width="26" height="26" />
             <div className="heading4">Link</div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <StyledLink
-              href={contentData.scrapLink}
-              target="_blank"
-              rel="noopener noreferrer"
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginLeft: 15,
+              }}
             >
-              {contentData.scrapLink}
-            </StyledLink>
-            <button
-              style={{ all: "unset", cursor: "pointer" }}
-              onClick={handleCopy}
-              title="링크 복사하기"
-            >
-              <img src={copy} alt="복사하기" width="25" height="25" />
-            </button>
+              <StyledLink
+                href={contentData?.scrapLink || ""}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {contentData?.scrapLink || ""}
+              </StyledLink>
+              <button
+                style={{ all: "unset", cursor: "pointer" }}
+                onClick={handleCopy}
+                title="링크 복사하기"
+              >
+                <img src={copy} alt="복사하기" width="25" height="25" />
+              </button>
+            </div>
           </div>
+
           <div
             style={{
               display: "flex",
@@ -138,7 +171,70 @@ export const Post = () => {
             <img src={note} alt="note icon" width="26" height="26" />
             <div className="heading4">Note</div>
           </div>
-          <CategoryBox>{contentData.scrapMemo}</CategoryBox>
+          <div style={{ marginRight: 30 }}>
+            <CategoryBox>{contentData?.scrapMemo ?? ""}</CategoryBox>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 17,
+              marginTop: 26,
+            }}
+          >
+            <img src={comment} alt="comment icon" width="26" height="26" />
+            <div className="heading4" style={{ marginTop: 5 }}>
+              Comments
+            </div>
+          </div>
+          <div
+            style={{
+              width: "100%",
+              backgroundColor: "rgba(255, 255, 255, 0.7)",
+              borderTop: "1px solid #909090",
+              borderBottom: "1px solid #909090",
+            }}
+          >
+            <CommentWrapper>
+              <CommentId>ID_is_myfriend</CommentId>
+              <div style={{ fontSize: 18 }}>정말 추천할만 하군~</div>
+            </CommentWrapper>
+            <CommentWrapper>
+              <CommentId>ID_is_myfriend</CommentId>
+              <div style={{ fontSize: 18 }}>정말 추천할만 하군~</div>
+            </CommentWrapper>
+            <CommentWrapper>
+              <CommentId>ID_is_myfriend</CommentId>
+              <div style={{ fontSize: 18 }}>정말 추천할만 하군~</div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 8,
+                  marginLeft: "auto",
+                  paddingRight: 30,
+                }}
+              >
+                <EditButton>수정</EditButton>
+                <DeleteButton>삭제</DeleteButton>
+              </div>
+            </CommentWrapper>
+          </div>
+          <Pagination />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              position: "relative",
+              marginTop: 10,
+            }}
+          >
+            <CommentId>작성자 아이디</CommentId>
+            <CommentBox placeholder="댓글을 달아보세요"></CommentBox>
+            <ActiveButton>저장</ActiveButton>
+          </div>
         </div>
       </MainWrapper>
     </div>
@@ -149,18 +245,18 @@ const MainWrapper = styled.div`
   border: 1px solid #d7d7d7;
   border-radius: 30px;
   width: 95%;
-  height: 80vh;
+  padding-top: 40px;
+  padding-bottom: 40px;
   margin-top: 30px;
   align-self: center;
 `;
 
 const CategoryBox = styled.div`
-  width: 95%;
-  height: 30vh;
+  width: 100%;
+  height: 15vh;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.7);
   border: 1px solid #909090;
-  padding-left: 15px;
   position: relative;
   padding-left: 30px;
   padding-top: 30px;
@@ -180,12 +276,85 @@ const StyledLink = styled.a`
 const ActiveButton = styled.button`
   border-radius: 30px;
   background-color: #ffbda2;
-  padding: 15px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   color: #ffffff;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
-  width: 100px;
+  width: 50px;
   border-width: 0;
   cursor: pointer;
+`;
+
+const InativeButton = styled.button`
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+  width: 50px;
+  border-width: 0;
+  cursor: pointer;
+`;
+
+const EditButton = styled.button`
+  border-radius: 30px;
+  background-color: #ffbda2;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+  width: 50px;
+  border-width: 0;
+  cursor: pointer;
+`;
+
+const DeleteButton = styled.button`
+  border-radius: 30px;
+  background-color: #d9d9d9;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+  width: 50px;
+  border-width: 0;
+  cursor: pointer;
+`;
+
+const CommentWrapper = styled.div`
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid #d9d9d9;
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  align-items: center;
+`;
+
+const CommentId = styled.div`
+  color: #ff6148;
+  font-weight: 600;
+  font-size: 18px;
+  padding-left: 20px;
+  width: 200px;
+`;
+const CommentBox = styled.input`
+  all: unset;
+  background-color: #f0f0f0;
+  border-radius: 30px;
+  width: 95%;
+  height: 40px;
+  font-size: 18px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  margin-right: 10px;
+
+  ::placeholder {
+    color: #aaa;
+  }
 `;
