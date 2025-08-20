@@ -78,7 +78,7 @@ export const SignUp = () => {
       );
       console.log("[회원가입 성공]", res.data);
       alert("회원가입이 완료되었습니다.");
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       console.log("[회원가입 실패]:", err.response?.data || err.message);
       alert("회원가입 중 오류가 발생했어요.");
