@@ -3,7 +3,7 @@ import { Home, FriendList, LinkUpload, MyPage, Post, PostEdit } from "./pages";
 import { MainLayout } from "./components";
 import { Search } from "./pages/search/Search";
 import { FriendInfo } from "./pages/friends";
-import { Login, LoginOk, SignUp, SetNickname } from "./pages/login";
+import { Login, LoginOk, SignUp } from "./pages/login";
 import ProfileEdit from "./pages/mypage/ProfileEdit";
 
 const App = () => {
@@ -14,7 +14,6 @@ const App = () => {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/loginok" element={<LoginOk />} />
-          <Route path="/setnickname" element={<SetNickname />} />
           <Route element={<MainLayout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/linkupload" element={<LinkUpload />} />
