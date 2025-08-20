@@ -4,28 +4,54 @@ import link from "../assets/icons/link2.png";
 import note from "../assets/icons/note.png";
 import starFill from "../assets/icons/star_fill.png";
 import starEmpty from "../assets/icons/star_line.png";
-import comment from "../assets/icons/comment.png";
+import commentIcon from "../assets/icons/comment.png";
 import copy from "../assets/icons/copy.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Pagination } from "../components";
-//import axios from "axios";
-//import { api } from "../lib/api";
+import { api } from "../lib/api";
+import publicIcon from "../assets/icons/public.png";
+import privateIcon from "../assets/icons/private.png";
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_SIZE = 3;
 
 export const Post = () => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
-  //const [contentData, setContentData] = useState(null);
+  const [contentData, setContentData] = useState(null);
 
-  const contentData = {
-    scrapTitle: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
-    scrapLink: "https://www.instagram.com/",
-    scrapMemo: "내 여름 추구미....**",
-    category: "여름",
-  };
+  const [comments, setComments] = useState([]);
+  const [page, setPage] = useState(DEFAULT_PAGE);
+  const [size] = useState(DEFAULT_SIZE);
 
-  /*useEffect(() => {
+  useEffect(() => {
+    if (!id) return;
+    api
+      .get(`/scraps/${id}/comments`, { params: { page, size } })
+      .then(({ data }) => {
+        const arr = Array.isArray(data?.data)
+          ? data.data
+          : Array.isArray(data)
+          ? data
+          : Array.isArray(data?.content)
+          ? data.content
+          : [];
+
+        setComments(arr);
+
+        console.log("댓글 조회: ", arr);
+      })
+      .catch((err) => {
+        console.log(
+          "댓글 조회 실패",
+          err.response?.status,
+          err.response?.data || err.message
+        );
+      });
+  }, [id, page, size]);
+
+  useEffect(() => {
     if (!id) return;
     api
       .get(`/scraps/${id}`)
@@ -45,7 +71,7 @@ export const Post = () => {
 
   if (!contentData) {
     return <div style={{ padding: 40 }}>불러오는 중…</div>;
-  }*/
+  }
 
   const handleCopy = async () => {
     try {
@@ -74,7 +100,9 @@ export const Post = () => {
               justifyContent: "space-between",
             }}
           >
-            <div style={{ fontSize: 20, marginBottom: 11 }}>카테고리</div>
+            <div style={{ fontSize: 20, marginBottom: 11 }}>
+              {`<${contentData.categoryName}>`}
+            </div>
             <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
               <ActiveButton onClick={() => navigate(`/post/edit/${id}`)}>
                 수정
@@ -98,6 +126,7 @@ export const Post = () => {
                 marginBottom: 15,
               }}
             >
+              {/*  onClick={() => setIsFavorite(!isFavorite)} */}
               <div className="heading3">{contentData?.scrapTitle ?? ""}</div>
               <button
                 style={{
@@ -105,14 +134,20 @@ export const Post = () => {
                   cursor: "pointer",
                   marginBottom: 7,
                 }}
-                onClick={() => setIsFavorite(!isFavorite)}
               >
-                {isFavorite ? (
+                {contentData.favorite === true ? (
                   <img src={starFill} width="40" height="40" />
                 ) : (
                   <img src={starEmpty} width="40" height="40" />
                 )}
               </button>
+              <div style={{ marginBottom: 7 }}>
+                {contentData.showPublic === true ? (
+                  <img src={publicIcon} width="40" height="40" />
+                ) : (
+                  <img src={privateIcon} width="40" height="40" />
+                )}
+              </div>
             </div>
             <button
               style={{
@@ -184,7 +219,7 @@ export const Post = () => {
               marginTop: 26,
             }}
           >
-            <img src={comment} alt="comment icon" width="26" height="26" />
+            <img src={commentIcon} alt="comment icon" width="26" height="26" />
             <div className="heading4" style={{ marginTop: 5 }}>
               Comments
             </div>
@@ -197,14 +232,12 @@ export const Post = () => {
               borderBottom: "1px solid #909090",
             }}
           >
-            <CommentWrapper>
-              <CommentId>ID_is_myfriend</CommentId>
-              <div style={{ fontSize: 18 }}>정말 추천할만 하군~</div>
-            </CommentWrapper>
-            <CommentWrapper>
-              <CommentId>ID_is_myfriend</CommentId>
-              <div style={{ fontSize: 18 }}>정말 추천할만 하군~</div>
-            </CommentWrapper>
+            {comments.map((item) => (
+              <CommentWrapper key={item.commentId}>
+                <CommentId>{item.authorNickname}</CommentId>
+                <div style={{ fontSize: 18 }}>{item.content}</div>
+              </CommentWrapper>
+            ))}
             <CommentWrapper>
               <CommentId>ID_is_myfriend</CommentId>
               <div style={{ fontSize: 18 }}>정말 추천할만 하군~</div>

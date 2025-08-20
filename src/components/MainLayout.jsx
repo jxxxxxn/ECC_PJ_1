@@ -10,10 +10,23 @@ import clipClick from "../assets/icons/clip-click.png";
 import clipUnclick from "../assets/icons/clip-unclick.png";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import search from "../assets/icons/search.png";
+import { useEffect, useState } from "react";
 
 export const MainLayout = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [nickname, setNickname] = useState("");
+
+  useEffect(() => {
+    const cached =
+      window?.user?.nickname ||
+      window.sessionStorage.getItem("nickname") ||
+      window.localStorage.getItem("nickname");
+    if (cached) {
+      setNickname(cached);
+      return;
+    }
+  });
 
   return (
     <Layout>
@@ -51,7 +64,7 @@ export const MainLayout = () => {
           </SearchWrapper>
           <NicknameWrapper onClick={() => navigate("/mypage")}>
             <ProfileImage src={profile} alt="basic profile" />
-            <div className="body1">Nickname</div>
+            <div className="body1">{nickname}</div>
           </NicknameWrapper>
         </Header>
         <Content>
