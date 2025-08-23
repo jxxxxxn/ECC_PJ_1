@@ -4,7 +4,8 @@ import SortBar from "../../components/SortBar";
 import Pagination from "../../components/Pagination";
 import externalLink from "../../assets/icons/external-link.svg";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getScraps } from "../../api/scraps";
 
 const FrameWrapper = styled.div`
   width: 100%;
@@ -106,46 +107,88 @@ const ContentItem = ({ title, description, onClick }) => (
 
 export default function PostlistLayout() {
   const [activeTab, setActiveTab] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const navigate = useNavigate();
 
-  const contentData = [
-    {
-      id: 1,
-      title: "여름 넘모 더운데 우짜나~*~*~*~~*~**~*~*~",
-      description: "내 여름 추구미....**",
-    },
-    ...Array(4)
-      .fill({ title: "제목", description: "내용" })
-      .map((item, i) => ({ ...item, id: i + 2 })),
-  ];
+  const [scraps, setScraps] = useState([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 6;
+
+  useEffect(() => {
+    const loadScraps = async () => {
+      try {
+        const data = await getScraps({
+          categoryId: selectedCategory,
+          favorite: activeTab === "favorites" ? true : undefined,
+        });
+        console.log("스크랩 응답:", data);
+
+        setScraps(Array.isArray(data) ? data : []);
+        setTotalPages(Math.ceil((data?.length || 0) / pageSize));
+        setCurrentPage(1);
+      } catch (err) {
+        console.error("스크랩 목록 불러오기 실패:", err);
+      }
+    };
+    loadScraps();
+  }, [selectedCategory, activeTab]);
+
+  const filteredScraps = scraps.filter((scrap) => {
+    // 1. 즐겨찾기 적용
+    if (activeTab === "favorites" && !scrap.favorite) return false;
+
+    // 2. 카테고리 적용
+    if (selectedCategory && scrap.categoryId !== selectedCategory)
+      return false;
+
+    return true;
+  });
+
+  const pagedScraps = filteredScraps.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+  
   return (
     // 중앙정렬
     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
         <HeaderWrapper>
           <PostCategory activeTab={activeTab} onTabClick={setActiveTab} />
-          <SortBar />
+          <SortBar 
+            selectedCategory={selectedCategory} 
+            onCategoryChange={ (categoryId) => {
+              if (selectedCategory === categoryId) {
+                setSelectedCategory(null); // 이미 선택된 카테고리면 해제
+              } else {
+                setSelectedCategory(categoryId);
+              }
+            }}
+          />
         </HeaderWrapper>
         <FrameWrapper>
           <InnerWrapper>
-            {contentData.map((item) => (
-              <div key={item.id} style={{ width: "100%" }}>
+            {pagedScraps.map((item, index) => (
+              <div key={item.scrapId} style={{ width: "100%" }}>
                 <ContentItem
-                  title={item.title}
-                  description={item.description}
-                  onClick={() => navigate(`/post/${item.id}`)}
+                  title={item.scrapTitle}
+                  description={item.scrapMemo}
+                  onClick={() => navigate(`/post/${item.scrapId}`)}
                 />
-                {item.id !== contentData[contentData.length - 1].id && (
-                  <Divider />
-                )}
+                {index !== pagedScraps.length - 1 && <Divider />}
               </div>
             ))}
           </InnerWrapper>
         </FrameWrapper>
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <Pagination currentPage={1} totalPages={5} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

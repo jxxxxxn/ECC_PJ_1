@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
+import { api } from "../lib/api";
 
 // Overlay
 const Overlay = styled.div`
@@ -97,17 +98,45 @@ const Button = styled.div`
   line-height: 29.4px;
 `;
 
-export const EditCategoryModal = ({ onClose, categoryName }) => {
+export const EditCategoryModal = ({ onClose, category, onSave  }) => {
+  const [value, setValue] = useState(category?.categoryName || "");
+  const [loading, setLoading] = useState(true);
+
+  const handleSave = async () => {
+    if (!value.trim()) return;
+    setLoading(true);
+    try {
+      await api.patch(`/categories/${category.categoryId}`, {
+        categoryName: value,
+      });
+      onSave({ ...category, categoryName: value }); // 부모 state 업데이트
+      onClose();
+    } catch (err) {
+      console.error("카테고리 수정 실패:", err);
+      alert("카테고리를 수정하는 데에 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return createPortal(
     <Overlay onClick={onClose}>
       <ModalBox onClick={(e) => e.stopPropagation()}>
         <InnerContainer>
-          <Title>{categoryName}</Title>
+          <Title>{category.categoryName}</Title>
           <SubTitle>카테고리명을 수정할까요?</SubTitle>
-          <InputBox />
+          <InputBox
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="카테고리명 입력"
+          />
           <ButtonGroup>
-            <Button variant="cancel" onClick={onClose}>취소</Button>
-            <Button>수정</Button>
+            <Button variant="cancel" onClick={onClose} disabled={loading}>
+              취소
+            </Button>
+            <Button onClick={handleSave} disabled={loading}>
+              수정
+            </Button>
           </ButtonGroup>
         </InnerContainer>
       </ModalBox>
