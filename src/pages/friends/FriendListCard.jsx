@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { getFriends } from "../../api/friends";
 import FriendCard from "./FriendCard"; 
 
 const Container = styled.div`
@@ -40,23 +42,26 @@ const Container = styled.div`
 
 
 export default function FriendListCard() {
-  const friends = [
-    { id: 1, name: "홍길동" },
-    { id: 2, name: "김철수" },
-    { id: 3, name: "이영희" },
-    { id: 4, name: "박민수" },
-    { id: 5, name: "최수정" },
-    { id: 6, name: "홍길동" },
-    { id: 7, name: "김철수" },
-    { id: 8, name: "이영희" },
-    { id: 9, name: "박민수" },
-    { id: 10, name: "최수정" },
-  ];
+  const [friends, setFriends] = useState([]);
+  
+  useEffect(() => {
+    const loadFriends = async () => {
+      try {
+        const data = await getFriends();
+        console.log("친구 목록 응답:", data);
+    
+        setFriends(Array.isArray(data) ? data : []); 
+      } catch (err) {
+        console.error("친구 목록 불러오기 실패:", err);
+      }
+    };
+    loadFriends();
+  }, []);
 
   return (
     <Container>
-      {friends.map((friend) => (
-        <FriendCard key={friend.id} friend={friend} />
+      {friends.map((friends) => (
+        <FriendCard key={friends.friendshipId} friend={friends} />
       ))}
     </Container>
   );

@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getCategories } from "../api/categories";
 import { EditCategoryModal } from "./EditCategoryModal";
 
 const Overlay = styled.div`
@@ -105,8 +106,22 @@ const Divider = styled.div`
 `;
 
 export const CategoryList = ({ onClose }) => {
-  const categories = ["카테고리 1", "카테고리 2", "카테고리 3", "카테고리 4"];
+  const [categories, setCategories] = useState([]);
   const [editCategory, setEditCategory] = useState(null);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await getCategories();
+        console.log("스크랩 응답:", data);
+  
+        setCategories(Array.isArray(data) ? data : []); 
+      } catch (err) {
+        console.error("스크랩 목록 불러오기 실패:", err);
+      }
+    };
+    loadCategories();
+  }, []);
 
   return (
     <div>
@@ -117,9 +132,9 @@ export const CategoryList = ({ onClose }) => {
                 <CategoryBox>
                     <CategoryListWrapper>
                     {categories.map((cat, idx) => (
-                        <div key={idx}>
-                        <CategoryItem key={idx}>
-                            <CategoryName>{cat}</CategoryName>
+                        <div key={cat.categoryId}>
+                        <CategoryItem>
+                            <CategoryName>{cat.categoryName}</CategoryName>
                             <ButtonGroup>
                                 <Button $variant="delete">삭제</Button>
                                 <Button $variant="edit" onClick={() => setEditCategory(cat)}>수정</Button>
@@ -136,8 +151,18 @@ export const CategoryList = ({ onClose }) => {
 
             {editCategory && (
                 <EditCategoryModal
-                categoryName={editCategory}
+                category={editCategory} // { categoryId, categoryName }
                 onClose={() => setEditCategory(null)}
+                onSave={(updatedCategory) => {
+                  setCategories((prev) =>
+                    prev.map((cat) =>
+                      cat.categoryId === updatedCategory.categoryId
+                        ? updatedCategory
+                        : cat
+                    )
+                  );
+                  setEditCategory(null);
+                }}
                 />
             )}
     </div>
