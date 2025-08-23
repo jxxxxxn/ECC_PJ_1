@@ -19,7 +19,7 @@ export const PostEdit = () => {
   const [scrapTitle, setScrapTitle] = useState("");
   const [scrapLink, setScrapLink] = useState("");
   const [scrapMemo, setScrapMemo] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+  const [showPublic, setShowPublic] = useState(null);
   const [categoryName, setCategoryName] = useState(null);
 
   const originalRef = useRef(null);
@@ -29,6 +29,7 @@ export const PostEdit = () => {
   const [viewModal, setViewModal] = useState(false);
 
   const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     api
@@ -59,13 +60,16 @@ export const PostEdit = () => {
         setScrapLink(item.scrapLink ?? item.url ?? "");
         setScrapMemo(item.scrapMemo ?? item.memo ?? "");
         setCategoryName(item.categoryName ?? item.categoryName ?? "");
-        setIsPublic(typeof item.isPublic === "boolean" ? item.isPublic : true);
+        setShowPublic(
+          typeof item.showPublic === "boolean" ? item.showPublic : true
+        );
 
         originalRef.current = {
           scrapTitle: item.scrapTitle ?? item.title ?? "",
           scrapLink: item.scrapLink ?? item.url ?? "",
           scrapMemo: item.scrapMemo ?? item.memo ?? "",
-          isPublic: typeof item.isPublic === "boolean" ? item.isPublic : true,
+          showPublic:
+            typeof item.showPublic === "boolean" ? item.showPublic : true,
           categoryName: item.categoryName ?? item.categoryName ?? "",
         };
       } catch (err) {
@@ -89,10 +93,10 @@ export const PostEdit = () => {
       o.scrapTitle !== scrapTitle ||
       o.scrapLink !== scrapLink ||
       o.scrapMemo !== scrapMemo ||
-      o.isPublic !== isPublic ||
+      o.showPublic !== showPublic ||
       o.categoryName !== categoryName
     );
-  }, [scrapTitle, scrapLink, scrapMemo, isPublic, categoryName]);
+  }, [scrapTitle, scrapLink, scrapMemo, showPublic, categoryName]);
 
   const handleEdit = async () => {
     try {
@@ -100,13 +104,14 @@ export const PostEdit = () => {
         scrapTitle,
         scrapLink,
         scrapMemo,
-        isPublic,
+        showPublic, // TODO 계속 true로만 내려오는 이슈 있음
         categoryName,
       };
 
       await api.patch(`/scraps/${id}`, body);
       setViewModal(false);
       navigate(`/post/${id}`);
+      console.log("[PATCH /scraps/:id] payload", showPublic);
     } catch (err) {
       setViewModal(false);
       alert(
@@ -154,10 +159,10 @@ export const PostEdit = () => {
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div className="body2">Public</div>
                 <button
-                  onClick={() => setIsPublic(true)}
+                  onClick={() => setShowPublic(true)}
                   style={{ borderWidth: 0, backgroundColor: "transparent" }}
                 >
-                  {isPublic ? (
+                  {showPublic ? (
                     <img src={checked} alt="click" />
                   ) : (
                     <img src={unchecked} alt="unclick" />
@@ -167,10 +172,10 @@ export const PostEdit = () => {
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <div className="body2">Private</div>
                 <button
-                  onClick={() => setIsPublic(false)}
+                  onClick={() => setShowPublic(false)}
                   style={{ all: "unset" }}
                 >
-                  {!isPublic ? (
+                  {!showPublic ? (
                     <img src={checked} alt="click" />
                   ) : (
                     <img src={unchecked} alt="unclick" />
@@ -286,7 +291,6 @@ export const PostEdit = () => {
   );
 };
 
-/* --- styles (변경 없음) --- */
 const MainWrapper = styled.div`
   border: 1px solid #d7d7d7;
   border-radius: 30px;

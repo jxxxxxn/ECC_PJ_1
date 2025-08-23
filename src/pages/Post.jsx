@@ -8,10 +8,11 @@ import commentIcon from "../assets/icons/comment.png";
 import copy from "../assets/icons/copy.png";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Pagination } from "../components";
+import { CommentPagination } from "../components";
 import { api } from "../lib/api";
 import publicIcon from "../assets/icons/public.png";
 import privateIcon from "../assets/icons/private.png";
+import { PopupModal } from "../components";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_SIZE = 3;
@@ -20,27 +21,62 @@ export const Post = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [contentData, setContentData] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
+  const [nickname, setNickname] = useState("");
+
+  // 댓글에 사용 할 닉네임 불러오기
+  useEffect(() => {
+    const cached =
+      window?.user?.nickname ||
+      window.sessionStorage.getItem("nickname") ||
+      window.localStorage.getItem("nickname");
+    if (cached) {
+      setNickname(cached);
+      return;
+    }
+  }, [nickname]);
+
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editComment, setEditComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [content, setContent] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [size] = useState(DEFAULT_SIZE);
+  const [totalPages, setTotalPages] = useState(0);
+  const [commentTotal, setCommentTotal] = useState(0);
 
+  const [viewModal, setViewModal] = useState(false);
+
+  // 댓글 GET
   useEffect(() => {
     if (!id) return;
+
     api
       .get(`/scraps/${id}/comments`, { params: { page, size } })
       .then(({ data }) => {
-        const arr = Array.isArray(data?.data)
-          ? data.data
-          : Array.isArray(data)
-          ? data
-          : Array.isArray(data?.content)
-          ? data.content
+        const payload = data?.data ?? data;
+
+        // 백엔드 응답에서 배열 꺼내기 (content, data, 배열 자체 케이스 모두 커버)
+        const arr = Array.isArray(payload?.content)
+          ? payload.content
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload)
+          ? payload
           : [];
 
-        setComments(arr);
+        // 전체 개수/전체 페이지 계산 (없으면 현재 페이지의 개수로 추정)
+        const totalElements =
+          payload?.totalElements ??
+          payload?.totalCount ??
+          (page - 1) * size + arr.length;
 
-        console.log("댓글 조회: ", arr);
+        const pages = Math.ceil(totalElements / size);
+
+        setComments(arr);
+        setTotalPages(arr.length > 0 ? Math.max(1, pages) : 0); // 댓글 없으면 0, 있으면 ≥1
       })
       .catch((err) => {
         console.log(
@@ -49,8 +85,14 @@ export const Post = () => {
           err.response?.data || err.message
         );
       });
-  }, [id, page, size]);
+  }, [id, page, size]); // ← commentTotal 는 의존성에서 제거
 
+  const [favorite, setFavorite] = useState(false);
+
+  const handleFavorite = async (next) => {
+    return api.patch(`/scraps/${id}/favorite`, { favorite: next });
+  };
+  // 게시글 상세 조회 GET
   useEffect(() => {
     if (!id) return;
     api
@@ -59,6 +101,7 @@ export const Post = () => {
         const item = data?.data ?? data;
         console.log("[scrap 조회 성공]", item);
         setContentData(item);
+        setFavorite(item.favorite);
       })
       .catch((err) => {
         console.log(
@@ -73,12 +116,115 @@ export const Post = () => {
     return <div style={{ padding: 40 }}>불러오는 중…</div>;
   }
 
+  // 클립보드에 복사하기
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(contentData.scrapLink);
       console.log("복사 성공!");
     } catch (err) {
       console.error("복사 실패", err);
+    }
+  };
+
+  // 게시글 삭제
+  const handleDelete = async () => {
+    if (deleting) return;
+    try {
+      setDeleting(true);
+      await api.delete(`/scraps/${id}`);
+      setViewModal(false);
+      navigate("/home");
+    } catch (err) {
+      const status = err.response?.status;
+      const msg =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        err.message ||
+        "삭제 중 오류가 발생했습니다.";
+
+      if (status === 409) {
+        console.warn("삭제 불가: 연결된 데이터 존재");
+      } else {
+        console.error("삭제 실패:", msg);
+      }
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  // 댓글 삭제
+  const handleCommentDelete = async (commentId) => {
+    try {
+      await api.delete(`/comments/${commentId}`);
+      setComments((prev) => prev.filter((c) => c.commentId !== commentId));
+    } catch (err) {
+      console.error("댓글 삭제 실패:", err.response?.data || err.message);
+    }
+  };
+
+  // 댓글 작성
+  const handleCommentSubmit = async () => {
+    const text = content.trim();
+    if (!text || !id || submitting) return;
+
+    try {
+      setSubmitting(true);
+
+      const { data } = await api.post(`/scraps/${id}/comments`, {
+        content: text,
+      });
+      const created = data?.data ?? data;
+
+      const newComment = {
+        commentId: created?.commentId ?? crypto.randomUUID(),
+        authorNickname: nickname,
+        content: created?.content ?? text,
+        isMine: true,
+      };
+
+      const isLastPage = page === totalPages || totalPages === 0;
+      const isPageFull = comments.length >= size;
+
+      if (isLastPage && isPageFull) {
+        setTotalPages((t) => (t > 0 ? t + 1 : 2));
+        setPage((p) => p + 1);
+      } else {
+        setComments((prev) => [newComment, ...prev]);
+      }
+
+      setContent("");
+    } catch (err) {
+      console.error("댓글 등록 실패:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "댓글 등록에 실패했습니다.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // 댓글 수정 제출
+  const handleCommentEdit = async (commentId) => {
+    const text = editComment.trim();
+    if (!commentId || !text) return;
+
+    try {
+      const { data } = await api.patch(`/comments/${commentId}`, {
+        content: text,
+      });
+      const updated = data?.data ?? data;
+
+      setComments((prev) =>
+        prev.map((c) =>
+          c.commentId === commentId
+            ? { ...c, content: updated?.content ?? text }
+            : c
+        )
+      );
+
+      setEditingCommentId(null);
+      setEditComment("");
+    } catch (err) {
+      console.error("댓글 수정 실패:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "댓글 수정에 실패했습니다.");
     }
   };
 
@@ -107,7 +253,9 @@ export const Post = () => {
               <ActiveButton onClick={() => navigate(`/post/edit/${id}`)}>
                 수정
               </ActiveButton>
-              <InativeButton>삭제</InativeButton>
+              <InativeButton onClick={() => setViewModal(true)}>
+                삭제
+              </InativeButton>
             </div>
           </div>
           <div
@@ -126,7 +274,6 @@ export const Post = () => {
                 marginBottom: 15,
               }}
             >
-              {/*  onClick={() => setIsFavorite(!isFavorite)} */}
               <div className="heading3">{contentData?.scrapTitle ?? ""}</div>
               <button
                 style={{
@@ -134,8 +281,22 @@ export const Post = () => {
                   cursor: "pointer",
                   marginBottom: 7,
                 }}
+                onClick={async () => {
+                  const next = !favorite;
+                  setFavorite(next); // UI 먼저 바꾸는 낙관적 업데이트
+                  try {
+                    const res = await handleFavorite(next); // <-- 실제 호출
+                    console.log("즐겨찾기 반영 성공:", res.status, res.data);
+                  } catch (err) {
+                    console.error(
+                      "즐겨찾기 반영 실패:",
+                      err.response?.data || err.message
+                    );
+                    setFavorite(!next); // 실패하면 되돌리기
+                  }
+                }}
               >
-                {contentData.favorite === true ? (
+                {favorite ? (
                   <img src={starFill} width="40" height="40" />
                 ) : (
                   <img src={starEmpty} width="40" height="40" />
@@ -181,7 +342,11 @@ export const Post = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {contentData?.scrapLink || ""}
+                {contentData?.scrapLink
+                  ? contentData.scrapLink.length > 30
+                    ? contentData.scrapLink.slice(0, 30) + "…"
+                    : contentData.scrapLink
+                  : ""}
               </StyledLink>
               <button
                 style={{ all: "unset", cursor: "pointer" }}
@@ -235,27 +400,78 @@ export const Post = () => {
             {comments.map((item) => (
               <CommentWrapper key={item.commentId}>
                 <CommentId>{item.authorNickname}</CommentId>
-                <div style={{ fontSize: 18 }}>{item.content}</div>
+                {editingCommentId === item.commentId ? (
+                  <Grow>
+                    <CommentBox
+                      value={editComment}
+                      onChange={(e) => setEditComment(e.target.value)}
+                      style={{ width: "99%", position: "relative" }}
+                      placeholder="내용을 수정하세요"
+                    />
+                  </Grow>
+                ) : (
+                  <div style={{ fontSize: 18 }}>{item.content}</div>
+                )}
+
+                {item.isMine === true && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 8,
+                      marginLeft: "auto",
+                      paddingRight: 30,
+                    }}
+                  >
+                    {editingCommentId === item.commentId ? (
+                      <EditButton
+                        onClick={() => handleCommentEdit(item.commentId)}
+                        disabled={!editComment.trim()}
+                      >
+                        저장
+                      </EditButton>
+                    ) : (
+                      <EditButton
+                        onClick={() => {
+                          setEditingCommentId(item.commentId);
+                          setEditComment(item.content);
+                        }}
+                      >
+                        수정
+                      </EditButton>
+                    )}
+
+                    <DeleteButton
+                      onClick={() => handleCommentDelete(item.commentId)}
+                    >
+                      삭제
+                    </DeleteButton>
+                  </div>
+                )}
               </CommentWrapper>
             ))}
-            <CommentWrapper>
-              <CommentId>ID_is_myfriend</CommentId>
-              <div style={{ fontSize: 18 }}>정말 추천할만 하군~</div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 8,
-                  marginLeft: "auto",
-                  paddingRight: 30,
-                }}
-              >
-                <EditButton>수정</EditButton>
-                <DeleteButton>삭제</DeleteButton>
-              </div>
-            </CommentWrapper>
           </div>
-          <Pagination />
+          {comments.length > 0 ? (
+            <CommentPagination
+              currentPage={page}
+              totalPages={totalPages}
+              onChange={setPage}
+            />
+          ) : (
+            <div
+              style={{
+                fontSize: 18,
+                color: "rgb(120, 120, 120)",
+                display: "flex",
+                justifyContent: "center",
+                padding: 15,
+                marginTop: 5,
+              }}
+            >
+              작성된 댓글이 없습니다.
+            </div>
+          )}
+
           <div
             style={{
               display: "flex",
@@ -265,9 +481,30 @@ export const Post = () => {
             }}
           >
             <CommentId>작성자 아이디</CommentId>
-            <CommentBox placeholder="댓글을 달아보세요"></CommentBox>
-            <ActiveButton>저장</ActiveButton>
+            <Grow>
+              <CommentBox
+                placeholder="댓글을 달아보세요"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                style={{ width: "99%" }}
+              />
+            </Grow>
+            <ActiveButton
+              onClick={handleCommentSubmit}
+              disabled={submitting || !content.trim()}
+            >
+              저장
+            </ActiveButton>
           </div>
+          {viewModal && (
+            <PopupModal
+              buttonText1="취소"
+              buttonText2={deleting ? "삭제" : "삭제"}
+              content="게시글을 삭제하시겠습니까?"
+              onClick1={() => setViewModal(false)}
+              onClick2={handleDelete}
+            />
+          )}
         </div>
       </MainWrapper>
     </div>
@@ -380,7 +617,6 @@ const CommentBox = styled.input`
   all: unset;
   background-color: #f0f0f0;
   border-radius: 30px;
-  width: 95%;
   height: 40px;
   font-size: 18px;
   padding: 0 20px;
@@ -390,4 +626,9 @@ const CommentBox = styled.input`
   ::placeholder {
     color: #aaa;
   }
+`;
+
+const Grow = styled.div`
+  flex: 1;
+  min-width: 0;
 `;
