@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 
 export const LinkUpload = () => {
-  const [isChecked, setIsChecked] = useState(false);
+  const [showPublic, setShowPublic] = useState(true);
   const [scrapTitle, setScrapTitle] = useState("");
   const [scrapLink, setScrapLink] = useState("");
   const [scrapMemo, setScrapMemo] = useState("");
@@ -19,20 +19,22 @@ export const LinkUpload = () => {
   const [catExistsError, setCatExistsError] = useState(false);
 
   const handleClick = () => {
-    setIsChecked(!isChecked);
+    setShowPublic(!showPublic);
   };
 
   const handleSubmit = async () => {
+    const body = {
+      categoryName: category,
+      scrapTitle: scrapTitle,
+      scrapLink: scrapLink,
+      scrapMemo: scrapMemo,
+      showPublic: showPublic,
+    };
     try {
-      await api.post("/scraps", {
-        categoryName: category,
-        scrapTitle: scrapTitle,
-        scrapLink: scrapLink,
-        scrapMemo: scrapMemo,
-        showPublic: isChecked,
-      });
+      await api.post("/scraps", body);
       setViewSaveModal(false);
       navigate("/home");
+      console.log("보낸 데이터", body);
     } catch (err) {
       setViewModal(false);
       alert(
@@ -136,15 +138,18 @@ export const LinkUpload = () => {
               }}
             >
               <div className="body2">Public</div>
-
               <button
-                onClick={handleClick}
-                style={{ borderWidth: 0, backgroundColor: "transparent" }}
+                onClick={() => setShowPublic(true)}
+                style={{
+                  borderWidth: 0,
+                  backgroundColor: "transparent",
+                  cursor: "pointer",
+                }}
               >
-                {isChecked === false ? (
-                  <img src={checked} alt="click" />
+                {showPublic ? (
+                  <img src={checked} alt="checked" />
                 ) : (
-                  <img src={unchecked} alt="unclick" />
+                  <img src={unchecked} alt="unchecked" />
                 )}
               </button>
             </div>
@@ -157,11 +162,14 @@ export const LinkUpload = () => {
               }}
             >
               <div className="body2">Private</div>
-              <button onClick={handleClick} style={{ all: "unset" }}>
-                {isChecked === false ? (
-                  <img src={unchecked} alt="unclick" />
+              <button
+                onClick={() => setShowPublic(false)}
+                style={{ all: "unset", cursor: "pointer" }}
+              >
+                {!showPublic ? (
+                  <img src={checked} alt="checked" />
                 ) : (
-                  <img src={checked} alt="click" />
+                  <img src={unchecked} alt="unchecked" />
                 )}
               </button>
             </div>
