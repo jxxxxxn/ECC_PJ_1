@@ -54,7 +54,10 @@ export default function FriendCard({ friend }) {
           {friend.friendNickname}
         </Username>
       </ProfileContainer>
-      <CardFollowButton />
+      <CardFollowButton 
+        friendUserId={friend.friendUserId}
+        initialFriendshipId={friend.friendshipId}
+      />
     </CardWrapper>
   );
 }

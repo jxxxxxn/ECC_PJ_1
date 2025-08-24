@@ -1,4 +1,5 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { getScrapsReminder } from "../api/scraps";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -38,10 +39,10 @@ const ListWrapper = styled.div`
   background: rgba(255, 245, 242, 0.7);
   border-radius: 30px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 25px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 `;
 
 const ListItem = styled.div`
@@ -52,22 +53,38 @@ const ListItem = styled.div`
 `;
 
 const ItemTitle = styled.div`
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 400;
   font-family: Pretendard, sans-serif;
   color: black;
-  line-height: 40px;
+  line-height: 30px;
 `;
 
 const ItemSubtitle = styled.div`
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 400;
   font-family: Pretendard, sans-serif;
   color: #767676;
-  line-height: 40px;
+  line-height: 30px;
 `;
 
 export default function LinkMind() {
+  const [reminders, setReminders] = useState([]);
+  const [loading, setLoading] = useState(true); 
+
+  useEffect(() => {
+    const loadScrapsReminder = async () => {
+      try {
+        const data = await getScrapsReminder(); 
+        console.log("링마인드 목록:", data);
+        setReminders(data);
+      } catch (err) {
+        console.error("링마인드 불러오기 실패:", err);
+      }
+    };
+    loadScrapsReminder();
+  }, []);
+
   return (
     <Container>
       <TitleGroup>
@@ -78,12 +95,16 @@ export default function LinkMind() {
       </TitleGroup>
 
       <ListWrapper>
-        {[...Array(5)].map((_, i) => (
-          <ListItem key={i}>
-            <ItemTitle>여름 넘모 더운데 ... (더보기)</ItemTitle>
-            <ItemSubtitle>내 여름 추구미....**</ItemSubtitle>
-          </ListItem>
-        ))}
+        {reminders.length === 0 ? (
+          <div>리마인드가 없어요!</div>
+        ) : (
+          reminders.map((item, i) => (
+            <ListItem key={i}>
+              <ItemTitle>{item.scrapTitle}</ItemTitle>
+              <ItemSubtitle>{item.scrapMemo}</ItemSubtitle>
+            </ListItem>
+          ))
+        )}
       </ListWrapper>
     </Container>
   );

@@ -6,3 +6,8 @@ export const getScraps = async () => {
   const res = await api.get("/scraps");
   return res.data;
 };
+
+export const getScrapsReminder = async () => {
+  const res = await api.get("/scraps/reminders");
+  return res.data;
+};
