@@ -37,6 +37,19 @@ export const Post = () => {
     }
   }, [nickname]);
 
+  // 스크랩 열람 여부 기록
+  useEffect(() => {
+    if (!id) return;
+    api
+      .patch(`/scraps/${id}/read`)
+      .then(() => {
+        console.log(`scrap ${id} 열람 기록 완료`);
+      })
+      .catch((err) => {
+        console.error("열람 기록 실패:", err.response?.data || err.message);
+      });
+  }, [id]);
+
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editComment, setEditComment] = useState("");
   const [comments, setComments] = useState([]);
@@ -45,7 +58,6 @@ export const Post = () => {
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [size] = useState(DEFAULT_SIZE);
   const [totalPages, setTotalPages] = useState(0);
-  const [commentTotal, setCommentTotal] = useState(0);
 
   const [viewModal, setViewModal] = useState(false);
 
@@ -58,7 +70,6 @@ export const Post = () => {
       .then(({ data }) => {
         const payload = data?.data ?? data;
 
-        // 백엔드 응답에서 배열 꺼내기 (content, data, 배열 자체 케이스 모두 커버)
         const arr = Array.isArray(payload?.content)
           ? payload.content
           : Array.isArray(payload?.data)
@@ -76,7 +87,7 @@ export const Post = () => {
         const pages = Math.ceil(totalElements / size);
 
         setComments(arr);
-        setTotalPages(arr.length > 0 ? Math.max(1, pages) : 0); // 댓글 없으면 0, 있으면 ≥1
+        setTotalPages(arr.length > 0 ? Math.max(1, pages) : 0);
       })
       .catch((err) => {
         console.log(
