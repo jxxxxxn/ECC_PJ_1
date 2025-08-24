@@ -8,7 +8,7 @@ export default function CategoryEdit({
   placeholder = "카테고리를 선택하세요",
   onChange,
   onAdd,
-  width = "50%",
+  width = "60%",
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);

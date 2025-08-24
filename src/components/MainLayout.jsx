@@ -11,11 +11,13 @@ import clipUnclick from "../assets/icons/clip-unclick.png";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import search from "../assets/icons/search.png";
 import { useEffect, useState } from "react";
+import { api } from "../lib/api";
 
 export const MainLayout = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [nickname, setNickname] = useState("");
+  const [isSearch, setIsSearch] = useState("");
 
   useEffect(() => {
     const cached =
@@ -59,8 +61,21 @@ export const MainLayout = () => {
       <Main>
         <Header>
           <SearchWrapper>
-            <img src={search} alt="검색" width="24" height="24" />
-            <SearchBar />
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                const q = isSearch.trim();
+                if (!q) return;
+                navigate(`/search?keyword=${encodeURIComponent(q)}`);
+              }}
+              style={{ all: "unset", cursor: "pointer" }}
+            >
+              <img src={search} alt="검색" width="24" height="24" />
+            </button>
+            <SearchBar
+              value={isSearch}
+              onChange={(e) => setIsSearch(e.target.value)}
+            />
           </SearchWrapper>
           <NicknameWrapper onClick={() => navigate("/mypage")}>
             <ProfileImage src={profile} alt="basic profile" />

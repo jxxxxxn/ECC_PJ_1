@@ -77,6 +77,11 @@ export const Login = () => {
             <TextBox
               value={loginId}
               onChange={(e) => setLoginId(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin();
+                }
+              }}
             />
           </InfoWrapper>
           <InfoWrapper className="body2">
@@ -86,6 +91,11 @@ export const Login = () => {
               style={{ fontSize: 30 }}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleLogin();
+                }
+              }}
             />
           </InfoWrapper>
           <LoginButton className="heading4" onClick={handleLogin}>
@@ -168,6 +178,7 @@ const TextBox = styled.input`
   border-width: 0;
   font-size: 20px;
   padding-left: 15px;
+  outline: none;
 `;
 
 // 텍스트 + 텍스트박스

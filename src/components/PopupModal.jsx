@@ -69,6 +69,7 @@ const GrayButton = styled.div`
   border-radius: 20px;
   width: 50px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 `;
 
 const OrangeButton = styled.div`
@@ -77,6 +78,7 @@ const OrangeButton = styled.div`
   border-radius: 20px;
   width: 50px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 `;
 
 const ButtonText = styled.div`

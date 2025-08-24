@@ -13,3 +13,4 @@ export { CategoryList } from "./CategoryList";
 export { EditCategoryModal } from "./EditCategoryModal";
 export { default as LinkMind } from "./LinkMind";
 export { default as CategoryEdit } from "./CategoryEdit";
+export { default as CommentPagination } from "./CommentPagination";

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import PostCategory from "../../components/PostCategory";
 import SortBar from "../../components/SortBar";
 import Pagination from "../../components/Pagination";
-import externalLink from "../../assets/icons/external-link.svg";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getScraps } from "../../api/scraps";
@@ -72,36 +71,12 @@ const Divider = styled.div`
   margin-bottom: 0px;
 `;
 
-const IconWrapper = styled.div`
-  width: 35px;
-  height: 35px;
-  align-items: center;
-  flex-shrink: 0;
-`;
-
-const Icon = () => {
-  return (
-    <img
-      src={externalLink}
-      alt="아이콘"
-      style={{
-        width: "35px",
-        height: "35px",
-        objectFit: "contain",
-      }}
-    />
-  );
-};
-
 const ContentItem = ({ title, description, onClick }) => (
   <Item onClick={onClick} style={{ cursor: "pointer" }}>
     <TextWrapper>
       <Title>{title}</Title>
       <Description>{description}</Description>
     </TextWrapper>
-    <IconWrapper>
-      <Icon />
-    </IconWrapper>
   </Item>
 );
 
@@ -140,8 +115,7 @@ export default function PostlistLayout() {
     if (activeTab === "favorites" && !scrap.favorite) return false;
 
     // 2. 카테고리 적용
-    if (selectedCategory && scrap.categoryId !== selectedCategory)
-      return false;
+    if (selectedCategory && scrap.categoryId !== selectedCategory) return false;
 
     return true;
   });
@@ -150,16 +124,16 @@ export default function PostlistLayout() {
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
-  
+
   return (
     // 중앙정렬
     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
         <HeaderWrapper>
           <PostCategory activeTab={activeTab} onTabClick={setActiveTab} />
-          <SortBar 
-            selectedCategory={selectedCategory} 
-            onCategoryChange={ (categoryId) => {
+          <SortBar
+            selectedCategory={selectedCategory}
+            onCategoryChange={(categoryId) => {
               if (selectedCategory === categoryId) {
                 setSelectedCategory(null); // 이미 선택된 카테고리면 해제
               } else {

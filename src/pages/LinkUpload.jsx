@@ -22,6 +22,26 @@ export const LinkUpload = () => {
     setIsChecked(!isChecked);
   };
 
+  const handleSubmit = async () => {
+    try {
+      await api.post("/scraps", {
+        categoryName: category,
+        scrapTitle: scrapTitle,
+        scrapLink: scrapLink,
+        scrapMemo: scrapMemo,
+        showPublic: isChecked,
+      });
+      setViewSaveModal(false);
+      navigate("/home");
+    } catch (err) {
+      setViewModal(false);
+      alert(
+        err.response?.data?.message ||
+          `수정에 실패했어요. (${err.response?.status || "net"})`
+      );
+    }
+  };
+
   const [viewModal, setViewModal] = useState(false);
   const [viewSaveModal, setViewSaveModal] = useState(false);
 
@@ -121,7 +141,7 @@ export const LinkUpload = () => {
                 onClick={handleClick}
                 style={{ borderWidth: 0, backgroundColor: "transparent" }}
               >
-                {!isChecked ? (
+                {isChecked === false ? (
                   <img src={checked} alt="click" />
                 ) : (
                   <img src={unchecked} alt="unclick" />
@@ -138,7 +158,7 @@ export const LinkUpload = () => {
             >
               <div className="body2">Private</div>
               <button onClick={handleClick} style={{ all: "unset" }}>
-                {!isChecked ? (
+                {isChecked === false ? (
                   <img src={unchecked} alt="unclick" />
                 ) : (
                   <img src={checked} alt="click" />
@@ -197,10 +217,7 @@ export const LinkUpload = () => {
           buttonText1="취소"
           buttonText2="저장"
           onClick1={() => setViewSaveModal(false)}
-          onClick2={() => {
-            setViewSaveModal(false);
-            navigate("/home");
-          }}
+          onClick2={handleSubmit}
         />
       )}
     </div>
