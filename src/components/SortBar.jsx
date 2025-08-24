@@ -62,7 +62,7 @@ const DropdownWrapper = styled.div`
   background: white;
 `;
 
-const SortBar = () => {
+const SortBar = ({ selectedCategory, onCategoryChange }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
 
   const handleClick = (btnId) => {
@@ -78,7 +78,10 @@ const SortBar = () => {
         </Label>
         {openDropdown === 1 && (
           <DropdownWrapper style={{ left: "-25px" }}>
-            <SortBarBox1 />
+            <SortBarBox1 
+              selectedCategory={selectedCategory} 
+              onCategoryChange={onCategoryChange} 
+            />
           </DropdownWrapper>
         )}
       </ButtonGroup>

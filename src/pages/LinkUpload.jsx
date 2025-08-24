@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import CategoryDropdown from "../components/CategoryBox";
 import { CategoryAdd, PopupModal } from "../components";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { api } from "../lib/api";
 
 export const LinkUpload = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -28,19 +28,15 @@ export const LinkUpload = () => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    let mounted = true;
-    axios
-      .get(
-        "http://eccteam1-env.eba-fpmvb3id.us-east-1.elasticbeanstalk.com/api/categories",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+    api
+      .get("/categories", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => {
         const list = Array.isArray(res.data?.data) ? res.data.data : res.data;
-        if (mounted) setCategories(list);
+        setCategories(list);
         console.log("조회 성공:", list);
       })
       .catch((err) => {
@@ -99,7 +95,7 @@ export const LinkUpload = () => {
             options={categories.map((c) => c.categoryName)}
             onChange={setCategory}
             onAdd={() => {
-              setCatExistsError(false); // 열 때 초기화
+              setCatExistsError(false);
               setViewModal(true);
             }}
           />
@@ -175,8 +171,8 @@ export const LinkUpload = () => {
             }
 
             try {
-              const res = await axios.post(
-                "http://eccteam1-env.eba-fpmvb3id.us-east-1.elasticbeanstalk.com/api/categories",
+              const res = await api.post(
+                "/categories",
                 { categoryName: name },
                 { headers: { "Content-Type": "application/json" } }
               );

@@ -45,16 +45,16 @@ const Username = styled(Link)`
   }
 `;
 
-export default function FriendCard({ friend }) { // 추후에 ID_is_myfriend -> {friend.id} 수정
+export default function FriendCard({ friend }) { 
   return (
     <CardWrapper>
       <ProfileContainer>
         <ProfileImage src={profile} alt="친구 프로필" /> 
-        <Username to={`/friends/${friend.id}`}>
-          ID_is_myfriend
+        <Username to={`/friends/${friend.friendUserId}`}>
+          {friend.friendNickname}
         </Username>
       </ProfileContainer>
-      <CardFollowButton/>
+      <CardFollowButton />
     </CardWrapper>
   );
 }

@@ -58,4 +58,5 @@ const ButtonText = styled.div`
   display: flex;
   justify-content: center;
   color: white;
+  cursor: pointer;
 `;

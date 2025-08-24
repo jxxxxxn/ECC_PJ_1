@@ -3,92 +3,132 @@ import styled from "styled-components";
 import "../../styles/TextStyle.css";
 import google from "../../assets/google.png";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "http://eccteam1-env.eba-fpmvb3id.us-east-1.elasticbeanstalk.com",
+  headers: { "Content-Type": "application/json" },
+});
 
 export const Login = () => {
   const navigate = useNavigate();
-  {
-    /*const [username, setUsername] = useState(null);
-const [password, setPassword] = useState(null);*/
-  }
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const { data } = await api.post("/auth/login", { loginId, password });
+
+      const token =
+        data?.accessToken ||
+        data?.access_token ||
+        data?.token ||
+        data?.data?.accessToken;
+
+      if (!token) {
+        console.warn("[로그인 응답] 토큰 키를 찾지 못함:", data);
+        alert("로그인 응답에 토큰이 없습니다. 서버 응답 형식 확인 필요");
+        return;
+      }
+
+      window.token = token;
+      const nickname = data.nickname || "닉네임";
+      window.user = { ...(window.user || {}), nickname };
+      window.sessionStorage.setItem("nickname", nickname);
+      window.sessionStorage.setItem("userId", data.userId);
+      navigate("/loginok");
+    } catch (err) {
+      const status = err.response?.status;
+      console.error("[로그인 실패]", status, err.response?.data || err.message);
+      if (status === 401) {
+        alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+      } else {
+        alert("로그인 중 오류가 발생했습니다.");
+      }
+    }
+  };
 
   return (
-    <>
-      <Container>
-        <HomeLogo src={logo} alt="linkrap image" />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <LoginBox>
-            <div
-              className="heading2"
-              style={{
-                textAlign: "center",
-                letterSpacing: 2,
-                lineHeight: "150%",
-              }}
-            >
-              집게로 꼭 쥐고 있던 링크,
-              <br />
-              이제 다시 꺼내볼까요?
-            </div>
-            <InfoWrapper className="body2">
-              <div style={{ paddingLeft: 10 }}>아이디</div>
-              <TextBox />
-            </InfoWrapper>
-            <InfoWrapper className="body2">
-              <div style={{ paddingLeft: 10 }}>비밀번호</div>
-              <TextBox type="password" style={{ fontSize: 30 }} />
-            </InfoWrapper>
-            <LoginButton
-              className="heading4"
-              onClick={() => navigate("/loginok")}
-            >
-              로그인
-            </LoginButton>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 30,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Line />
-              <div>OR</div>
-              <Line />
-            </div>
-            <GoogleButton className="body2">
-              <img
-                src={google}
-                alt="google signin"
-                style={{ width: 45, height: 45 }}
-              />
-              Sign in with Google
-            </GoogleButton>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                letterSpacing: 2,
-                gap: 10,
-                fontSize: 20,
-              }}
-            >
-              Don't have an account?
-              <JoinButton onClick={() => navigate("/signup")}>
-                Join now
-              </JoinButton>
-            </div>
-          </LoginBox>
-        </div>
-      </Container>
-    </>
+    <Container>
+      <HomeLogo src={logo} alt="linkrap image" />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LoginBox>
+          <div
+            className="heading2"
+            style={{
+              textAlign: "center",
+              letterSpacing: 2,
+              lineHeight: "150%",
+            }}
+          >
+            집게로 꼭 쥐고 있던 링크,
+            <br />
+            이제 다시 꺼내볼까요?
+          </div>
+          <InfoWrapper className="body2">
+            <div style={{ paddingLeft: 10 }}>아이디</div>
+            <TextBox
+              value={loginId}
+              onChange={(e) => setLoginId(e.target.value)}
+            />
+          </InfoWrapper>
+          <InfoWrapper className="body2">
+            <div style={{ paddingLeft: 10 }}>비밀번호</div>
+            <TextBox
+              type="password"
+              style={{ fontSize: 30 }}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </InfoWrapper>
+          <LoginButton className="heading4" onClick={handleLogin}>
+            로그인
+          </LoginButton>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 30,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Line />
+            <div>OR</div>
+            <Line />
+          </div>
+          <GoogleButton className="body2">
+            <img
+              src={google}
+              alt="google signin"
+              style={{ width: 45, height: 45 }}
+            />
+            Sign in with Google
+          </GoogleButton>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              letterSpacing: 2,
+              gap: 10,
+              fontSize: 20,
+            }}
+          >
+            Don't have an account?
+            <JoinButton onClick={() => navigate("/signup")}>
+              Join now
+            </JoinButton>
+          </div>
+        </LoginBox>
+      </div>
+    </Container>
   );
 };
 
