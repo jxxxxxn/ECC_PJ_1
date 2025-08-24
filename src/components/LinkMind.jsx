@@ -70,12 +70,12 @@ const ItemSubtitle = styled.div`
 
 export default function LinkMind() {
   const [reminders, setReminders] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadScrapsReminder = async () => {
       try {
-        const data = await getScrapsReminder(); 
+        const data = await getScrapsReminder();
         console.log("링마인드 목록:", data);
         setReminders(data);
       } catch (err) {
@@ -90,7 +90,9 @@ export default function LinkMind() {
       <TitleGroup>
         <Title>링마인드</Title>
         <Subtitle>
-          놓친 링크,<br />다시 찝어드려요!
+          놓친 링크,
+          <br />
+          다시 찝어드려요!
         </Subtitle>
       </TitleGroup>
 
