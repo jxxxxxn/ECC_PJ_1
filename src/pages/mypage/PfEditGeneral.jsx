@@ -1,7 +1,118 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import PWCheckButton from '../../components/PWCheckButton';
-import cameraIcon from '../../assets/icons/camera.svg';
+import React, { useState } from "react";
+import styled from "styled-components";
+import PWCheckButton from "../../components/PWCheckButton";
+import cameraIcon from "../../assets/icons/camera.svg";
+import { PopupModal } from "../../components";
+import { DeleteModal } from "../../components";
+import { api } from "../../lib/api";
+
+const PfEditGeneral = () => {
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [logoutModal, setLogoutModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+
+  const isMatch = password !== "" && password === confirm;
+
+  const handleLogout = () => {
+    api.post("/auth/logout");
+    setLogoutModal(false);
+  };
+
+  const handleDelete = () => {};
+
+  return (
+    <Container>
+      <InputSection>
+        <ProfileSection>
+          <ProfileImageWrapper>
+            <ProfileImageIcon src={cameraIcon} />
+          </ProfileImageWrapper>
+          <ChangePhotoButton>
+            <ChangePhotoText>사진 변경</ChangePhotoText>
+          </ChangePhotoButton>
+        </ProfileSection>
+
+        <Field>
+          <Label>닉네임</Label>
+          <InputField>
+            <InputWrapper placeholder="닉네임을 입력하세요" />
+          </InputField>
+        </Field>
+
+        <Field>
+          <Label>비밀번호</Label>
+          <PasswordSection>
+            <PasswordField>
+              <PasswordInput
+                type="password"
+                placeholder="비밀번호 입력"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <PWCheckButton />
+            </PasswordField>
+            <PasswordField>
+              <PasswordInput
+                type="password"
+                placeholder="비밀번호 확인"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+              />
+              <PWCheckButton isMatch={isMatch} />
+            </PasswordField>
+          </PasswordSection>
+        </Field>
+
+        <Field>
+          <Label>이메일</Label>
+          <InputField>
+            <InputWrapper placeholder="이메일을 입력하세요" />
+          </InputField>
+        </Field>
+      </InputSection>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between", // 좌우 배치
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <SaveButton>
+          <SaveText>저장</SaveText>
+        </SaveButton>
+        <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+          <LogoutButton onClick={() => setLogoutModal(true)}>
+            로그아웃
+          </LogoutButton>
+          <DeleteButton onClick={() => setDeleteModal(true)}>탈퇴</DeleteButton>
+        </div>
+      </div>
+      {deleteModal && (
+        <DeleteModal
+          content="계정을 삭제 하시겠습니까?"
+          buttonText1="취소"
+          buttonText2="네"
+          onClick1={() => setDeleteModal(false)}
+          onClick2={() => setDeleteModal(false)}
+        />
+      )}
+      {logoutModal && (
+        <PopupModal
+          content="로그아웃 하시겠습니까?"
+          buttonText1="취소"
+          buttonText2="네"
+          onClick1={() => setLogoutModal(false)}
+          onClick2={handleLogout}
+        />
+      )}
+    </Container>
+  );
+};
+
+export default PfEditGeneral;
 
 // 전체 컨테이너
 const Container = styled.div`
@@ -37,7 +148,7 @@ const Label = styled.label`
   padding-top: 12px;
   font-size: 24px;
   font-weight: 600;
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   color: black;
 `;
 
@@ -52,11 +163,11 @@ const InputWrapper = styled.input`
   width: 600px;
   height: 54px;
   padding: 0 25px;
-  background: #F0F0F0;
+  background: #f0f0f0;
   border-radius: 30px;
   border: none;
   font-size: 16px;
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-weight: 300;
   color: black;
 
@@ -100,7 +211,7 @@ const ProfileImageWrapper = styled.div`
   width: 120px;
   height: 120px;
   border-radius: 9999px;
-  background: #F0F0F0;
+  background: #f0f0f0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,7 +224,7 @@ const ProfileImageIcon = styled.img`
 
 // 사진 변경 버튼
 const ChangePhotoButton = styled.button`
-  background: #F0F0F0;
+  background: #f0f0f0;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
   padding: 19px 25px;
@@ -126,14 +237,14 @@ const ChangePhotoButton = styled.button`
 
 const ChangePhotoText = styled.div`
   font-size: 20px;
-  font-family: 'Pretendard';
+  font-family: "Pretendard";
   font-weight: 500;
   color: black;
 `;
 
 // 저장 버튼
 const SaveButton = styled.button`
-  background: #FFE3D7;
+  background: #ffe3d7;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 30px;
   padding: 18px 30px;
@@ -145,77 +256,30 @@ const SaveButton = styled.button`
 `;
 
 const SaveText = styled.span`
-  color: #FF6148;
-  font-size: 20px;
-  font-family: 'Pretendard';
+  color: #ff6148;
+  font-size: 18px;
+  font-family: "Pretendard";
   font-weight: 500;
 `;
 
+const LogoutButton = styled.button`
+  all: unset;
+  font-size: 18;
+  background-color: #929191;
+  color: #ffffff;
+  padding: 15px 20px;
+  border-radius: 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+`;
 
-const PfEditGeneral = () => {
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-
-  const isMatch = password !== '' && password === confirm;
-
-  return (
-    <Container>
-      <InputSection>
-        <ProfileSection>
-          <ProfileImageWrapper>
-            <ProfileImageIcon src={cameraIcon} />
-          </ProfileImageWrapper>
-          <ChangePhotoButton>
-            <ChangePhotoText>사진 변경</ChangePhotoText>
-          </ChangePhotoButton>
-        </ProfileSection>
-
-        <Field>
-          <Label>닉네임</Label>
-          <InputField>
-            <InputWrapper placeholder="닉네임을 입력하세요" />
-          </InputField>
-        </Field>
-
-        <Field>
-          <Label>비밀번호</Label>
-          <PasswordSection>
-            <PasswordField>
-              <PasswordInput 
-                type="password"
-                placeholder="비밀번호 입력"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)} 
-              />
-              <PWCheckButton />
-            </PasswordField>
-            <PasswordField>
-              <PasswordInput 
-                type="password"
-                placeholder="비밀번호 확인"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-              />
-              <PWCheckButton isMatch={isMatch} />
-            </PasswordField>
-          </PasswordSection>
-        </Field>
-        
-
-        <Field>
-          <Label>이메일</Label>
-          <InputField>
-            <InputWrapper placeholder="이메일을 입력하세요" />
-          </InputField>
-        </Field>
-      </InputSection>
-
-      <SaveButton>
-        <SaveText>저장</SaveText>
-      </SaveButton>
-    </Container>
-
-  );
-};
-
-export default PfEditGeneral;
+const DeleteButton = styled.button`
+  all: unset;
+  font-size: 18;
+  background-color: #929191;
+  color: #fa5151;
+  padding: 15px 20px;
+  border-radius: 30px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+`;
