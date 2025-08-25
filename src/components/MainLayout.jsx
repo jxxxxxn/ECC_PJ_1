@@ -67,6 +67,7 @@ export const MainLayout = () => {
                 const q = isSearch.trim();
                 if (!q) return;
                 navigate(`/search?keyword=${encodeURIComponent(q)}`);
+                setIsSearch("");
               }}
               style={{ all: "unset", cursor: "pointer" }}
             >

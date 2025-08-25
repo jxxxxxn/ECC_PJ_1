@@ -2,10 +2,40 @@ import styled from "styled-components";
 import { PageHeader, LinkMind } from "../../components";
 import SearchlistLayout from "./SearchlistLayout";
 import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { api } from "../../lib/api";
 
 export const Search = () => {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("keyword") || "";
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!keyword) {
+      setItems([]);
+      return;
+    }
+    setLoading(true);
+    api
+      .get("/scraps/search", { params: { keyword } })
+      .then(({ data }) => {
+        const payload = data?.data ?? data;
+        const arr = Array.isArray(payload?.content)
+          ? payload.content
+          : Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.data)
+          ? payload.data
+          : [];
+        setItems(arr);
+      })
+      .catch((err) => {
+        console.log("검색 실패:", err.response?.data || err.message);
+        setItems([]);
+      })
+      .finally(() => setLoading(false));
+  }, [keyword]);
 
   return (
     <div
@@ -14,28 +44,30 @@ export const Search = () => {
         flex: 3,
         display: "flex",
         flexDirection: "column",
-        gap: "15px",
+        gap: 15,
       }}
     >
       <TitleWrapper>
         <PageHeader title={keyword} />
         <SearchText>에 대해 찝어봤어요!</SearchText>
       </TitleWrapper>
-      <div
-        style={{ flex: 3, display: "flex", flexDirection: "row", gap: "35px" }}
-      >
+
+      <div style={{ flex: 3, display: "flex", gap: 35 }}>
         <div
           style={{
             width: "100%",
-            height: "100%",
             display: "flex",
             flexDirection: "column",
-            gap: "15px",
+            gap: 15,
           }}
         >
-          <SearchlistLayout />
+          {loading ? (
+            <div style={{ padding: 20, color: "#777" }}>불러오는 중…</div>
+          ) : (
+            <SearchlistLayout items={items} />
+          )}
         </div>
-        <div style={{ flex: 1, marginTop: "30px" }}>
+        <div style={{ flex: 1 }}>
           <LinkMind />
         </div>
       </div>
